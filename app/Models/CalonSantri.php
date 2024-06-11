@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class CalonSantri extends Model
+{
+    use HasFactory;
+    // jika menggunakan uuid
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'user_id',
+        'tanggal_daftar',
+        'nama_lengkap_santri',
+        'tempat_lahir_santri',
+        'tanggal_lahir_santri',
+        'jenis_kelamin_santri',
+    ];
+
+    //insert calon santri
+    public static function insertCalonSantri(array $data = [])
+    {
+        return static::create($data);
+    }
+
+
+    // relasi user dan calon santri
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
+    }
+}

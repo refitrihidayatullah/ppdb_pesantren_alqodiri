@@ -1,0 +1,154 @@
+/* google font poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #4070f4; */
+    background: linear-gradient(
+        90deg,
+        rgba(31, 255, 140, 0.9724264705882353) 1%,
+        rgba(8, 98, 45, 1) 100%
+    );
+}
+.container {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 30px;
+    margin: 0 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.container header {
+    position: relative;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+.container header::before {
+    content: "";
+    position: absolute;
+    height: 3px;
+    width: 27px;
+    left: 0;
+    bottom: -2px;
+    border-radius: 8px;
+    background-color: #4070f4;
+}
+.container form {
+    position: relative;
+    margin-top: 16px;
+    min-height: 90px;
+    background-color: #fff;
+}
+.container form .details {
+    margin-top: 30px;
+}
+.container form .details.ID {
+    margin-top: 20px;
+}
+.container form .title {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 6px 0;
+    color: #333;
+}
+.container form .fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+form .fields .input-fields {
+    display: flex;
+    width: calc(100% / 1 - 15px);
+    flex-direction: column;
+}
+.input-fields label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2e2e2e;
+}
+.input-fields input {
+    height: 42px;
+    margin: 8px 0;
+    color: #333;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 5px;
+    padding: 0 15px;
+    outline: none;
+    border: 1px solid #aaa;
+}
+.input-fields input:is(:focus, :valid) {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+.input-fields input[type="date"] {
+    color: #707070;
+}
+.input-fields input[type="date"]:valid {
+    color: #333;
+}
+.container form button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    height: 45px;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    margin: 25px 0;
+    background-color: #4070f4;
+}
+
+form button:hover {
+    background-color: #265df2;
+}
+form button i {
+    margin: 0 6px;
+}
+.belum_punya_akun {
+    text-decoration: none;
+    color: grey;
+    font-size: 1rem;
+}
+.is-invalid {
+    border: 3px solid red;
+}
+.form-text {
+    font-size: 0.7rem;
+}
+.text-danger {
+    color: red;
+}
+.alert {
+    border: 1px solid red;
+    padding: 0.9rem;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+}
+.alert-danger {
+    background: red;
+}
+.text-white {
+    color: #f1f1f1;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+.alert-success {
+    background: green;
+}
