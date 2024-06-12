@@ -12,7 +12,7 @@ class ValidatorRules
             $data,
             [
                 'name' => 'required',
-                'email' => 'required|unique:Users,email',
+                'email' => 'required|unique:users,email',
                 'no_hp' => 'required|numeric|regex:/^[0-9]{10,15}$/|unique:Users,no_hp',
                 'password' => 'required',
                 'password_confirm' => 'required|same:password',

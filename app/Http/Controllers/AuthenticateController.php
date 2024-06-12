@@ -7,7 +7,6 @@ use Illuminate\View\View;
 use App\Models\CalonSantri;
 use Illuminate\Http\Request;
 use App\Validators\ValidatorRules;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -64,17 +63,30 @@ class AuthenticateController extends Controller
         request()->merge([$field => $login]);
 
 
-        $credentetials = [
-            $field => $login,
-            'password' => $request->input('password'),
-        ];
-
-        if (Auth::attempt($credentetials)) {
+        // $credentials = [
+        //     $field => $login,
+        //     'password' => $request->input('password'),
+        // ];
+        // $credentials = $request->only($credential);
+        $credentials = $request->only($field, 'password');
+        if (Auth::attempt($credentials)) {
             // Jika sukses, redirect ke dashboard
-            return redirect()->intended('/dashboard')->with('success', 'Selamat Datang ' . Auth::user()->name);
+
+            return redirect('/dashboard')->with('success', 'Selamat Datang ' . Auth::user()->name);
         } else {
             // Jika gagal, redirect kembali ke login dengan pesan error
             return redirect('/login')->with('failed', 'Username or Password is wrong!');
+        }
+    }
+
+    public function logout_action(): RedirectResponse
+    {
+        // dd(Auth::check());
+        if (Auth::check()) {
+            Auth::logout();
+            return redirect('/login')->with('success', 'Anda Berhasil Logout');
+        } else {
+            return redirect('/dashboard')->with('failed', 'terjadi kesalahan');
         }
     }
 };

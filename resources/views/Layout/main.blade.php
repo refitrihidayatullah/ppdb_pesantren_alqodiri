@@ -9,6 +9,7 @@
     <!-- Favicon icon -->
     <!-- <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png'"> -->
     <!-- Custom Stylesheet -->
+    <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
 
 </head>
@@ -72,7 +73,7 @@
                             <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
                         </div>
                         <input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
-                        <div class="drop-down   d-md-none">
+                        <div class="drop-down d-md-none">
 							<form action="#">
 								<input type="text" class="form-control" placeholder="Search">
 							</form>
@@ -82,21 +83,21 @@
                 <div class="header-right">
                     <ul class="clearfix">
                         <li class="icons dropdown d-none d-md-flex">
-                           <span>Admin</span>
+                           <span>admin</span>
                         </li>
                         <li class="icons dropdown">
-                            <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                                 <span class="activity active"></span>
                                 <img src="{{asset('assets/images/user/1.png')}}" height="40" width="40" alt="">
                             </div>
-                            <div class="drop-down dropdown-profile   dropdown-menu">
+                            <div class="drop-down dropdown-profile dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
                                             <a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
                                         </li>
                                         <hr class="my-2">
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                        <li><a href="{{url('/logout')}}"><i class="icon-key"></i> <span>Logout</span></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -115,13 +116,22 @@
         <div class="nk-sidebar">           
             <div class="nk-nav-scroll">
                 <ul class="metismenu" id="menu">
-                    <li class="nav-label">Dashboard</li>
+                    {{-- <li class="nav-label">Dashboard</li> --}}
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./index.html">Home 1</a></li>
+                            <li><a href="{{url('/dashboard')}}">Dashboard</a></li>
+                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Management Users</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{url('/users')}}">Data Users</a></li>
                             <!-- <li><a href="./index-2.html">Home 2</a></li> -->
                         </ul>
                     </li>
@@ -164,14 +174,30 @@
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">@yield('breadcrumb1')</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">@yield('breadcrumb2')</a></li>
                     </ol>
                 </div>
             </div>
             <!-- row -->
 
             <div class="container-fluid">
+    <!-- first alert -->
+     @if(Session::has('failed'))
+     <div style="width: 50%" class="alert alert-danger alert-dismissible mx-3" role="alert" id="myAlert">
+      <span class="text-sm">Failed {{Session::get('failed')}}.</span>
+     </div>
+      @elseif(Session::has('success'))
+     <div style="width: 50%" class="alert alert-primary alert-dismissible " role="alert" id="myAlert">
+     <span class="text-sm ">Success {{Session::get('success')}}.</span>
+     </div>
+     @else
+     @endif
+    <!-- end alert -->
+
+    @yield('content')
+
+
 
             </div>
             <!-- #/ container -->
@@ -205,6 +231,26 @@
     <script src="{{asset('assets/js/settings.js')}}"></script>
     <script src="{{asset('assets/js/gleek.js')}}"></script>
     <script src="{{asset('assets/js/styleSwitcher.js')}}"></script>
+
+    <script src="{{asset('assets/plugins/tables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js')}}"></script>
+
+
+    <script>
+        // Ambil elemen alert
+        var alertElement = document.getElementById('myAlert');
+    
+        // Tampilkan alert
+        alertElement.style.display = 'block';
+    
+        // Setelah 3 detik, sembunyikan alert
+        setTimeout(function() {
+            alertElement.style.display = 'none';
+        }, 3000); // 3000 milidetik = 3 detik
+    </script>
+
+
 
 </body>
 

@@ -10,8 +10,10 @@ class CalonSantri extends Model
 {
     use HasFactory;
     // jika menggunakan uuid
-    public $incrementing = false;
-    protected $keyType = 'string';
+    // public $incrementing = false;
+    // protected $keyType = 'string';
+    protected $table = 'calon_santris';
+    protected $primaryKey = 'id_santri';
 
     protected $fillable = [
         'user_id',
