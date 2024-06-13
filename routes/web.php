@@ -23,10 +23,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/register', [AuthenticateController::class, 'register']);
 Route::post('/register', [AuthenticateController::class, 'register_action']);
-Route::get('/login', [AuthenticateController::class, 'login']);
+Route::get('/login', [AuthenticateController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/login', [AuthenticateController::class, 'login_action']);
 Route::get('/logout', [AuthenticateController::class, 'logout_action']);
 
 
-Route::get('/dashboard', [DashboardController::class, 'dashboard']);
-Route::get('/users', [ManagementUsers::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth']);
+Route::get('/users', [ManagementUsers::class, 'index'])->middleware('auth');
+Route::post('/users', [ManagementUsers::class, 'store']);

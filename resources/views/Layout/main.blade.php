@@ -83,7 +83,7 @@
                 <div class="header-right">
                     <ul class="clearfix">
                         <li class="icons dropdown d-none d-md-flex">
-                           <span>admin</span>
+                           <span>{{Auth::user()->name??'user'}}</span>
                         </li>
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative" data-toggle="dropdown">
@@ -223,6 +223,7 @@
         Main wrapper end
     ***********************************-->
 
+
     <!--**********************************
         Scripts
     ***********************************-->
@@ -235,6 +236,9 @@
     <script src="{{asset('assets/plugins/tables/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js')}}"></script>
+
+    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 
 
     <script>
@@ -249,6 +253,14 @@
             alertElement.style.display = 'none';
         }, 3000); // 3000 milidetik = 3 detik
     </script>
+
+<script>
+    $(document).ready(function() {
+        @if ($errors->any())
+            $('.formModal').modal('show');
+        @endif
+    });
+</script>
 
 
 

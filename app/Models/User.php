@@ -28,10 +28,6 @@ class User extends Authenticatable
         'level',
     ];
 
-    public function getPasswordAttribute($value)
-    {
-        return null; // Return null when accessing the password attribute
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,12 +48,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+    // relasi first
+
+    // relasi user dengan calonsantri
     public function CalonSantris(): HasOne
     {
         return $this->hasOne(CalonSantri::class, 'user_id', 'id_user');
     }
+
+
+    // relasi end
+
+    // registrasi first
+
+    // function registrasi pembuatan akun
     public static function registerUser(array $data = [])
     {
         return static::create($data);
     }
+
+    // registrasi end
+
+    // management akun first
+
+    // function mengambil semua data users
+    public static function getAllUsers()
+    {
+        return static::select('id_user', 'name', 'email', 'no_hp', 'level', 'created_at', 'updated_at')->get();
+    }
+
+    // management akun end
 }
