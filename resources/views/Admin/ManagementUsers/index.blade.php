@@ -46,16 +46,22 @@
                                                     <tbody>
                                                         @foreach ($dataAllUsers as $allUsers)    
                                                         <tr>
-                                                            <td>1</td>
+                                                            <td>{{$loop->iteration}}</td>
                                                             <td>{{$allUsers->name??''}}</td>
                                                             <td>{{$allUsers->email??''}}</td>
                                                             <td>{{$allUsers->no_hp??''}}</td>
                                                             <td>
+                                                                @if ($allUsers->level === "superadmin")                                                                  
                                                                 <span class="badge badge-dark">{{$allUsers->level??''}}</span>
+                                                                @elseif($allUsers->level === "admin")
+                                                                <span class="badge badge-primary">{{$allUsers->level??''}}</span>
+                                                                @else            
+                                                                <span class="badge badge-success">{{$allUsers->level??''}}</span>
+                                                                @endif
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <div class="dropdown-menu"><a class="dropdown-item" href="#">Edit</a> <a class="dropdown-item" href="#">Delete</a>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allUsers->id_user}}" href="#">Edit</a> <a class="dropdown-item btn-delete" href="#">Delete</a>
                                                             </div>
                                                             </td>
                                                         </tr>
@@ -157,19 +163,13 @@
                                     <select id="inputState" name="level" id="level" class="form-control">
                                         <option value="">Pilih...</option>
                                         @foreach ($statusUser as $status)
-                                        <option value="{{$status}}" {{ old('level') == {{$status}} ? 'selected' : '' }}>Calon Santri</option>
-                                            
+                                        <option value="{{$status}}" {{ old('level') == $status ? 'selected' : '' }}>{{$status}}</option>       
                                         @endforeach
-
-                                        {{-- <option value="calonsantri" {{ old('level') == 'calonsantri' ? 'selected' : '' }}>Calon Santri</option>
-                                        <option value="admin" {{ old('level') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="superadmin" {{ old('level') == 'superadmin' ? 'selected' : '' }}>Super Admin</option> --}}
                                     </select>
                                     @error('level')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
-                                    </div>
-                                    
+                                </div>                                    
                                 <div class="form-group col-md-12">
                                     <label>Password</label>
                                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"" placeholder="masukkan password..">
@@ -199,5 +199,85 @@
       <!--**********************************
         modal tambah data users - management users end
     ***********************************-->
+
+    <!--**********************************
+        modal edit data users - management users first
+    ***********************************-->
+    <div class="modal fade bd-example-modal-lg formModal" id="editUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Users</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="basic-form p-4">
+                        <form action="{{url('/users')}}" method="POST">
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <label>Nama Lengkap</label>
+                                    <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror"" placeholder="masukkan nama calon santri..">
+                                    @error('name')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>Email</label>
+                                    <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror"" placeholder="masukkan email anda..">
+                                    @error('email')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>No Hp</label>
+                                    <input type="number" name="no_hp" value="{{old('no_hp')}}" class="form-control @error('no_hp') is-invalid @enderror"" placeholder="masukkan no hp anda..">
+                                    @error('no_hp')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Status</label>
+                                    <select id="inputState" name="level" id="level" class="form-control">
+                                        <option value="">Pilih...</option>
+                                        @foreach ($statusUser as $status)
+                                        <option value="{{$status}}" {{ old('level') == $status ? 'selected' : '' }}>{{$status}}</option>       
+                                        @endforeach
+                                    </select>
+                                    @error('level')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>                                    
+                                <div class="form-group col-md-12">
+                                    <label>Password</label>
+                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"" placeholder="masukkan password..">
+                                    @error('password')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Konfirmasi Password</label>
+                                    <input type="password" name="password_confirm" class="form-control @error('password_confirm') is-invalid @enderror"" placeholder="masukkan password">
+                                    @error('password_confirm')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+                            </div>
+                           
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      <!--**********************************
+        modal tambah data users - management users end
+    ***********************************-->
+
 
 @endsection

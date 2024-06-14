@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 
 class ManagementUsers extends Controller
 {
@@ -34,12 +35,21 @@ class ManagementUsers extends Controller
         try {
             $validation = ValidatorRules::tambahUserRules($request->all());
             if ($validation->fails()) {
-                return redirect()->back()->withErrors($validation)->withInput();
+                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
             }
-            return redirect('/users')->with('success', 'Berhasil menambahkan data user');
+            $password1 = $request->password;
+            $password2 = $request->password_confirm;
+
+            if ($password1 === $password2) {
+                $data = $request->all();
+                $data = $request->except('password_confirm');
+                $data['password'] = Hash::make($password1);
+                User::registerUser($data);
+                return redirect('/users')->with('message', 'success');
+            }
+            return redirect('/users')->with('message', 'failed');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
         }
-        return redirect('/users')->with('success', 'Data User Berhasil Ditambahkan');
     }
 }

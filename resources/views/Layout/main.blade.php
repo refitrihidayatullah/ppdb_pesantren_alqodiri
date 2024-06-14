@@ -11,6 +11,8 @@
     <!-- Custom Stylesheet -->
     <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
+  
+   
 
 </head>
 
@@ -183,6 +185,9 @@
 
             <div class="container-fluid">
     <!-- first alert -->
+    <div class="flash-data" data-flashdata="<?= Session::get('message')?>">
+       <!-- value data-flash dimabil lalu diolah di mysweetalert.js -->
+    </div>
      @if(Session::has('failed'))
      <div style="width: 50%" class="alert alert-danger alert-dismissible mx-3" role="alert" id="myAlert">
       <span class="text-sm">Failed {{Session::get('failed')}}.</span>
@@ -227,6 +232,9 @@
     <!--**********************************
         Scripts
     ***********************************-->
+    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+    
+    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('assets/plugins/common/common.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.min.js')}}"></script>
     <script src="{{asset('assets/js/settings.js')}}"></script>
@@ -236,10 +244,9 @@
     <script src="{{asset('assets/plugins/tables/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js')}}"></script>
-
-    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
-    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-
+    <script src="{{asset('assets/sweetalert/sweetalert2.all.min.js')}}"></script>
+    <script src={{asset('assets/js/mysweetalert.js')}}></script>
+ 
 
     <script>
         // Ambil elemen alert
@@ -253,6 +260,8 @@
             alertElement.style.display = 'none';
         }, 3000); // 3000 milidetik = 3 detik
     </script>
+
+
 
 <script>
     $(document).ready(function() {

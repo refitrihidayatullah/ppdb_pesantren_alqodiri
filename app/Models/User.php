@@ -75,7 +75,7 @@ class User extends Authenticatable
     // function mengambil semua data users
     public static function getAllUsers()
     {
-        return static::select('id_user', 'name', 'email', 'no_hp', 'level', 'created_at', 'updated_at')->get();
+        return static::select('id_user', 'name', 'email', 'no_hp', 'level', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get();
     }
 
     // management akun end
