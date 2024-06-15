@@ -18,16 +18,21 @@ class ManagementUsers extends Controller
 
     public function index(): View
     {
+        // get data panitia[admin,superadmin]
+        $dataAllPanitia = User::getAllPanitia();
+        // array level user
         $statusUser = [
             'calonsiswa', 'admin', 'superadmin'
         ];
+
         //get data alluser
         $dataAllUsers = User::getAllUsers();
-        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser'));
+        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia'));
     }
 
+
     /**
-     * Display a listing of the resource.
+     * func tambah data user :redirectResponse
      */
 
     public function store(Request $request): RedirectResponse
@@ -50,6 +55,42 @@ class ManagementUsers extends Controller
             return redirect('/users')->with('message', 'failed');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * func update data user :redirectResponse
+     */
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $validation = ValidatorRules::updateUserRules($request->all());
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+
+            // $data = $request->except('_token', '_method');
+            $data = [
+                'name' => $request->updateName,
+                'email' => $request->updateEmail,
+                'no_hp' => $request->updateNo_hp,
+                'level' => $request->updateLevel,
+            ];
+            User::updateUser($data, $id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
+        }
+    }
+    public function destroy($id)
+    {
+        try {
+            User::deleteUser($id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
     }
 }

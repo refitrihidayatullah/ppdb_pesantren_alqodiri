@@ -63,6 +63,28 @@ class ValidatorRules
     }
     // validator register/tambah user --admin end
 
+
+    // validator register/tambah user --admin first
+    public static function updateUserRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'updateName' => 'required',
+                'updateEmail' => 'required',
+                'updateNo_hp' => 'required',
+                'updateLevel' => 'required',
+            ],
+            [
+                'updateName.required' => 'nama lengkap harus diisis',
+                'updatEmail.required' => 'email harus diisi',
+                'updateNo_hp.required' => 'no hp harus diisi',
+                'updateLevel.required' => ' status harus diisi',
+            ]
+        );
+    }
+    // validator register/tambah user --admin end
+
     // validator login --client first
     public static function loginRules(array $data = [])
     {

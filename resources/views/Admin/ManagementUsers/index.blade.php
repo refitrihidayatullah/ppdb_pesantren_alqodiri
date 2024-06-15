@@ -30,7 +30,7 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                                <button data-toggle="modal" data-target="#tambahUserModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></button>
+                                                <button data-toggle="modal" data-target="#tambahUserModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa-solid fa-plus"></i></i></span></button>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered zero-configuration">
                                                     <thead>
@@ -61,7 +61,10 @@
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allUsers->id_user}}" href="#">Edit</a> <a class="dropdown-item btn-delete" href="#">Delete</a>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="tooltip" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allUsers->id_user}}" href="#">Edit</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers->id_user}}" href="#">Delete</a>
+
                                                             </div>
                                                             </td>
                                                         </tr>
@@ -87,9 +90,76 @@
                     </div>
                     <div class="tab-pane fade" id="panitiausers">
                         <div class="p-t-15">
-                            <h4>This is profile title</h4>
-                            <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.</p>
-                            <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                                <button data-toggle="modal" data-target="#tambahUserModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></button>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered zero-configuration">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Nama</th>
+                                                            <th>Email</th>
+                                                            <th>No Hp</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($dataAllPanitia as $allPanitia)    
+                                                        <tr>
+                                                            <td>{{$loop->iteration}}</td>
+                                                            <td>{{$allPanitia->name??''}}</td>
+                                                            <td>{{$allPanitia->email??''}}</td>
+                                                            <td>{{$allPanitia->no_hp??''}}</td>
+                                                            <td>
+                                                                @if ($allPanitia->level === "superadmin")                                                                  
+                                                                <span class="badge badge-dark">{{$allPanitia->level??''}}</span>
+                                                                @elseif($allPanitia->level === "admin")
+                                                                <span class="badge badge-primary">{{$allPanitia->level??''}}</span>
+                                                                @else            
+                                                                <span class="badge badge-success">{{$allPanitia->level??''}}</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allPanitia->id_user}}" href="#">Edit</a>
+                                                                {{-- <form action="{{url("/users/".$allPanitia->id_user)}}" method="POST">
+                                                                    @csrf
+                                                                    @method('delete')
+                                                            <a class="dropdown-item btn-delete" href="{{url("/users/".$allUsers->id_user)}}">Delete</a>
+                                                                </form> --}}
+                                                                {{-- <a href="#" class="btn btn-danger btn-delete" data-id="{{ $allUsers->id_user }}">Delete</a>
+                                                                <form id="delete-form-{{ $allUsers->id_user }}" action="{{ url('users/'. $allUsers->id_user) }}" method="POST" style="display: none;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                </form> --}}
+
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers->id_user}}" href="#">Delete</a>
+
+                                                            </div>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Nama</th>
+                                                            <th>Email</th>
+                                                            <th>No Hp</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="putrausers">
@@ -139,28 +209,28 @@
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label>Nama Lengkap</label>
-                                    <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror"" placeholder="masukkan nama calon santri..">
+                                    <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror" placeholder="masukkan nama calon santri..">
                                     @error('name')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-12">
                                     <label>Email</label>
-                                    <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror"" placeholder="masukkan email anda..">
+                                    <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" placeholder="masukkan email anda..">
                                     @error('email')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>No Hp</label>
-                                    <input type="number" name="no_hp" value="{{old('no_hp')}}" class="form-control @error('no_hp') is-invalid @enderror"" placeholder="masukkan no hp anda..">
+                                    <input type="number" name="no_hp" value="{{old('no_hp')}}" class="form-control @error('no_hp') is-invalid @enderror" placeholder="masukkan no hp anda..">
                                     @error('no_hp')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Status</label>
-                                    <select id="inputState" name="level" id="level" class="form-control">
+                                    <select name="level" id="level" class="form-control  @error('level') is-invalid @enderror">
                                         <option value="">Pilih...</option>
                                         @foreach ($statusUser as $status)
                                         <option value="{{$status}}" {{ old('level') == $status ? 'selected' : '' }}>{{$status}}</option>       
@@ -172,14 +242,14 @@
                                 </div>                                    
                                 <div class="form-group col-md-12">
                                     <label>Password</label>
-                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"" placeholder="masukkan password..">
+                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="masukkan password..">
                                     @error('password')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label>Konfirmasi Password</label>
-                                    <input type="password" name="password_confirm" class="form-control @error('password_confirm') is-invalid @enderror"" placeholder="masukkan password">
+                                    <input type="password" name="password_confirm" class="form-control @error('password_confirm') is-invalid @enderror" placeholder="masukkan password">
                                     @error('password_confirm')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
@@ -203,7 +273,8 @@
     <!--**********************************
         modal edit data users - management users first
     ***********************************-->
-    <div class="modal fade bd-example-modal-lg formModal" id="editUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+    @foreach ($dataAllUsers as $allUsers)
+    <div class="modal fade bd-example-modal-lg" id="editUserModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -213,56 +284,43 @@
                 </div>
                 <div class="modal-body">
                     <div class="basic-form p-4">
-                        <form action="{{url('/users')}}" method="POST">
+                        <form action="{{url("/users/".$allUsers->id_user)}}" method="POST">
                             @csrf
+                            @method('PUT')
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label>Nama Lengkap</label>
-                                    <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror"" placeholder="masukkan nama calon santri..">
-                                    @error('name')
+                                    <input type="text" name="updateName"  value="{{old('updateName') ? : $allUsers->name }}" class="form-control @error('updateName') is-invalid @enderror" placeholder="masukkan nama calon santri..">
+                                    @error('updateName')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-12">
                                     <label>Email</label>
-                                    <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror"" placeholder="masukkan email anda..">
-                                    @error('email')
+                                    <input type="email" name="updateEmail" value="{{ old('updateEmail')?:$allUsers->email}}" class="form-control @error('updateEmail') is-invalid @enderror" placeholder="masukkan email anda..">
+                                    @error('updateEmail')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>No Hp</label>
-                                    <input type="number" name="no_hp" value="{{old('no_hp')}}" class="form-control @error('no_hp') is-invalid @enderror"" placeholder="masukkan no hp anda..">
-                                    @error('no_hp')
+                                    <input type="number" name="updateNo_hp" value="{{ old('updateNo_hp')?: $allUsers->no_hp}}" class="form-control @error('updateNo_hp') is-invalid @enderror" placeholder="masukkan no hp anda..">
+                                    @error('updateNo_hp')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Status</label>
-                                    <select id="inputState" name="level" id="level" class="form-control">
+                                    <select name="updateLevel" class="form-control  @error('updateLevel') is-invalid @enderror">
                                         <option value="">Pilih...</option>
                                         @foreach ($statusUser as $status)
-                                        <option value="{{$status}}" {{ old('level') == $status ? 'selected' : '' }}>{{$status}}</option>       
+                                        <option value="{{$allUsers->level === $status ? $allUsers->level : $status}}" {{$allUsers->level === $status ?'selected':''}}>{{$status}}</option>       
                                         @endforeach
                                     </select>
-                                    @error('level')
+                                    @error('updateLevel')
                                     <div class="form-text text-danger">{{$message}}.</div>
                                   @enderror
                                 </div>                                    
-                                <div class="form-group col-md-12">
-                                    <label>Password</label>
-                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"" placeholder="masukkan password..">
-                                    @error('password')
-                                    <div class="form-text text-danger">{{$message}}.</div>
-                                  @enderror
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label>Konfirmasi Password</label>
-                                    <input type="password" name="password_confirm" class="form-control @error('password_confirm') is-invalid @enderror"" placeholder="masukkan password">
-                                    @error('password_confirm')
-                                    <div class="form-text text-danger">{{$message}}.</div>
-                                  @enderror
-                                </div>
                             </div>
                            
                         <div class="modal-footer">
@@ -275,8 +333,44 @@
             </div>
         </div>
     </div>
+    @endforeach
       <!--**********************************
-        modal tambah data users - management users end
+        modal edit data users - management users end
+    ***********************************-->
+
+
+        <!--**********************************
+        modal delete data users - management users first
+    ***********************************-->
+    @foreach ($dataAllUsers as $allUsers)
+    <div class="modal fade bd-example-modal-lg formModal" id="deleteUserModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Users</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="basic-form p-4">
+                        <form action="{{url("/users/".$allUsers->id_user)}}" method="POST">
+                            @csrf
+                            @method('delete')
+                            <h5>Anda Yakin Akan Menghapus?</h5>
+                           
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+      <!--**********************************
+        modal delete data users - management users end
     ***********************************-->
 
 

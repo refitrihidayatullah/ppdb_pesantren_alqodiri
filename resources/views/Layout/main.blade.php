@@ -217,7 +217,7 @@
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>&copy; Developed by <a href="https://refitrihidayatullah.github.io/">Refi Tri Hidayatullah</a> 2024</p>
+                <p>&copy; Developed by <a href="https://refitrihidayatullah.github.io/" target="_blank">Refi Tri Hidayatullah</a> 2024</p>
             </div>
         </div>
         <!--**********************************
@@ -233,8 +233,8 @@
         Scripts
     ***********************************-->
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-    
     <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
+    
     <script src="{{asset('assets/plugins/common/common.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.min.js')}}"></script>
     <script src="{{asset('assets/js/settings.js')}}"></script>
@@ -246,6 +246,7 @@
     <script src="{{asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js')}}"></script>
     <script src="{{asset('assets/sweetalert/sweetalert2.all.min.js')}}"></script>
     <script src={{asset('assets/js/mysweetalert.js')}}></script>
+    <script src="{{asset('assets/js/fontawesome.js')}}" crossorigin="anonymous"></script>
  
 
     <script>
@@ -253,23 +254,19 @@
         var alertElement = document.getElementById('myAlert');
     
         // Tampilkan alert
-        alertElement.style.display = 'block';
+        if(alertElement)
+        {
+            alertElement.style.display = 'block';
+            // Setelah 3 detik, sembunyikan alert
+            setTimeout(function() {
+                alertElement.style.display = 'none';
+            }, 3000); // 3000 milidetik = 3 detik
+        }else{
+            
+        }
     
-        // Setelah 3 detik, sembunyikan alert
-        setTimeout(function() {
-            alertElement.style.display = 'none';
-        }, 3000); // 3000 milidetik = 3 detik
     </script>
 
-
-
-<script>
-    $(document).ready(function() {
-        @if ($errors->any())
-            $('.formModal').modal('show');
-        @endif
-    });
-</script>
 
 
 

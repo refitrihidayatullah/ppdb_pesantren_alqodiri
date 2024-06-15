@@ -31,3 +31,5 @@ Route::get('/logout', [AuthenticateController::class, 'logout_action']);
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth']);
 Route::get('/users', [ManagementUsers::class, 'index'])->middleware('auth');
 Route::post('/users', [ManagementUsers::class, 'store']);
+Route::put('/users/{id}', [ManagementUsers::class, 'update']);
+Route::delete('/users/{id}', [ManagementUsers::class, 'destroy']);
