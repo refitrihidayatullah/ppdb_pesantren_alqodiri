@@ -67,15 +67,24 @@ class User extends Authenticatable
     {
         return static::create($data);
     }
+    // function registrasi pembuatan akun
+    public static function registerUserPanitia(array $data = [])
+    {
+        return static::create($data);
+    }
 
     // registrasi end
 
     // management akun first
-
     // function mengambil semua data users
     public static function getAllUsers()
     {
         return static::select('id_user', 'name', 'email', 'no_hp', 'level', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get();
+    }
+    // function mengambil dataUserById
+    public static function getUserById($id)
+    {
+        return static::where('id_user', $id)->first();
     }
 
     // function mengambil semua data panitia[admin,superadmin]

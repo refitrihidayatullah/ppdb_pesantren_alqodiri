@@ -30,7 +30,7 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                                <button data-toggle="modal" data-target="#tambahUserModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa-solid fa-plus"></i></i></span></button>
+                                                <a href="{{url('/users/create')}}"   class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa-solid fa-plus"></i></i></span></a>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered zero-configuration">
                                                     <thead>
@@ -61,10 +61,9 @@
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="tooltip" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
-                                                            <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allUsers->id_user}}" href="#">Edit</a>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers->id_user}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" href="{{url("/users/".$allUsers->id_user."/edit")}}">Edit</a>
                                                                 <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers->id_user}}" href="#">Delete</a>
-
                                                             </div>
                                                             </td>
                                                         </tr>
@@ -94,7 +93,7 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                                <button data-toggle="modal" data-target="#tambahUserModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></button>
+                                                <button data-toggle="modal" data-target="#tambahPanitiaModal"  class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></button>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered zero-configuration">
                                                     <thead>
@@ -126,18 +125,7 @@
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
                                                             <div class="dropdown-menu"><a class="dropdown-item" data-toggle="modal" data-target="#editUserModal{{$allPanitia->id_user}}" href="#">Edit</a>
-                                                                {{-- <form action="{{url("/users/".$allPanitia->id_user)}}" method="POST">
-                                                                    @csrf
-                                                                    @method('delete')
-                                                            <a class="dropdown-item btn-delete" href="{{url("/users/".$allUsers->id_user)}}">Delete</a>
-                                                                </form> --}}
-                                                                {{-- <a href="#" class="btn btn-danger btn-delete" data-id="{{ $allUsers->id_user }}">Delete</a>
-                                                                <form id="delete-form-{{ $allUsers->id_user }}" action="{{ url('users/'. $allUsers->id_user) }}" method="POST" style="display: none;">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                </form> --}}
-
-                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers->id_user}}" href="#">Delete</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allPanitia->id_user}}" href="#">Delete</a>
 
                                                             </div>
                                                             </td>
@@ -192,7 +180,7 @@
 
 
  <!--**********************************
-        modal tambah data users - management users first
+        modal tambah data all users - management users first
     ***********************************-->
     <div class="modal fade bd-example-modal-lg formModal" id="tambahUserModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -267,8 +255,10 @@
         </div>
     </div>
       <!--**********************************
-        modal tambah data users - management users end
+        modal tambah data all users - management users end
     ***********************************-->
+
+    
 
     <!--**********************************
         modal edit data users - management users first
@@ -335,12 +325,12 @@
     </div>
     @endforeach
       <!--**********************************
-        modal edit data users - management users end
+        modal edit data all users - management users end
     ***********************************-->
 
 
         <!--**********************************
-        modal delete data users - management users first
+        modal delete data all users - management users first
     ***********************************-->
     @foreach ($dataAllUsers as $allUsers)
     <div class="modal fade bd-example-modal-lg formModal" id="deleteUserModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
@@ -371,6 +361,50 @@
     @endforeach
       <!--**********************************
         modal delete data users - management users end
+    ***********************************-->
+
+
+     <!--**********************************
+        modal change password users - management users first
+    ***********************************-->
+    @foreach ($dataAllUsers as $allUsers)
+    <div class="modal fade bd-example-modal-lg formModal" id="changePasswordModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ChangePassword</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="basic-form p-4">
+                        <form action="{{url("/users/changepassword/".$allUsers->id_user)}}" method="POST">
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <label>new password</label>
+                                    {{-- <input type="text" name="password_id" value="{{$allUsers->id_user}}" class="form-control "> --}}
+                                    <input type="password" name="password_new" value="{{old('password_new')}}" class="form-control @error('password_new') is-invalid @enderror" placeholder="masukkan nama panitia..">
+                                    @error('password_new')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
+                                </div>
+
+                            </div>
+                           
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+      <!--**********************************
+        modal change password users - management users end
     ***********************************-->
 
 

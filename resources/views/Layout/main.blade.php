@@ -248,7 +248,7 @@
     <script src={{asset('assets/js/mysweetalert.js')}}></script>
     <script src="{{asset('assets/js/fontawesome.js')}}" crossorigin="anonymous"></script>
  
-
+{{-- 
     <script>
         // Ambil elemen alert
         var alertElement = document.getElementById('myAlert');
@@ -265,7 +265,7 @@
             
         }
     
-    </script>
+    </script> --}}
 
 
 

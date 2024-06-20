@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class ManagementUsers extends Controller
 {
     /**
-     * func menampilkdam data users :view
+     * func menampilkan data a users :view
      */
 
     public function index(): View
@@ -25,11 +25,36 @@ class ManagementUsers extends Controller
             'calonsiswa', 'admin', 'superadmin'
         ];
 
+        $statusPanitia = [
+            'admin', 'superadmin'
+        ];
+
         //get data alluser
         $dataAllUsers = User::getAllUsers();
-        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia'));
+        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
+    }
+    /**
+     * func menampilkan data create users :view
+     */
+    public function create(): View
+    {
+        $statusUser = [
+            'calonsiswa', 'admin', 'superadmin'
+        ];
+        return view('Admin.ManagementUsers.create', compact('statusUser'));
     }
 
+    /**
+     * func menampilkan data users :view
+     */
+    public function edit($id): View
+    {
+        $dataUser = User::getUserById($id);
+        $statusUser = [
+            'calonsiswa', 'admin', 'superadmin'
+        ];
+        return view('Admin.ManagementUsers.edit', compact('statusUser', 'dataUser'));
+    }
 
     /**
      * func tambah data user :redirectResponse
@@ -40,7 +65,7 @@ class ManagementUsers extends Controller
         try {
             $validation = ValidatorRules::tambahUserRules($request->all());
             if ($validation->fails()) {
-                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
+                return redirect('/users/create')->withErrors($validation)->with('message', 'failed')->withInput();
             }
             $password1 = $request->password;
             $password2 = $request->password_confirm;
@@ -52,15 +77,17 @@ class ManagementUsers extends Controller
                 User::registerUser($data);
                 return redirect('/users')->with('message', 'success');
             }
-            return redirect('/users')->with('message', 'failed');
+            return redirect('/users/create')->with('message', 'failed');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
         }
     }
 
 
+
+
     /**
-     * func update data user :redirectResponse
+     * func update data user panitia :redirectResponse
      */
 
     public function update(Request $request, string $id)
@@ -91,6 +118,22 @@ class ManagementUsers extends Controller
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+
+    public function changepassword(Request $request, $id)
+    {
+        try {
+            $user = User::find($id);
+            if ($user) {
+                $data['password'] = Hash::make($request->password_new);
+                User::updateUser($data, $id);
+                return redirect('/users')->with('success', 'Password updated successfully');
+            } else {
+                return redirect('/users')->with('failed', 'User not found');
+            }
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Error occurred: ' . $e->getMessage());
         }
     }
 }

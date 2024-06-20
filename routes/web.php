@@ -30,6 +30,9 @@ Route::get('/logout', [AuthenticateController::class, 'logout_action']);
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth']);
 Route::get('/users', [ManagementUsers::class, 'index'])->middleware('auth');
-Route::post('/users', [ManagementUsers::class, 'store']);
+Route::get('/users/create', [ManagementUsers::class, 'create'])->middleware('auth');
+Route::get('/users/{id}/edit', [ManagementUsers::class, 'edit'])->middleware('auth');
+Route::post('/users/store', [ManagementUsers::class, 'store']);
+Route::post('/users/{id}', [ManagementUsers::class, 'changepassword']);
 Route::put('/users/{id}', [ManagementUsers::class, 'update']);
 Route::delete('/users/{id}', [ManagementUsers::class, 'destroy']);
