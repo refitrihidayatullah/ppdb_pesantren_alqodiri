@@ -10,6 +10,7 @@
     <!-- <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png'"> -->
     <!-- Custom Stylesheet -->
     <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/plugins/jquery-steps/css/jquery.steps.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
   
    
@@ -124,8 +125,16 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{url('/dashboard')}}">Dashboard</a></li>
-                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
+                            <li><a href="{{url('/dashboard')}}">Dashboard --admin</a></li>
+                            <li><a href="{{url('/dashboard-santri')}}">Dashboard --santri</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Form Pendaftaran</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{url('/form-pendaftaran')}}">Form Pendaftaran</a></li>
                         </ul>
                     </li>
                     <li>
@@ -247,6 +256,26 @@
     <script src="{{asset('assets/sweetalert/sweetalert2.all.min.js')}}"></script>
     <script src={{asset('assets/js/mysweetalert.js')}}></script>
     <script src="{{asset('assets/js/fontawesome.js')}}" crossorigin="anonymous"></script>
+    <script src="{{asset('assets/plugins/jquery-steps/build/jquery.steps.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
+    <script src="{{asset('assets/js/plugins-init/jquery-steps-init.js')}}"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Check if there's a saved tab in local storage
+            var activeTab = localStorage.getItem('activeTab');
+            if (activeTab) {
+                // Show the saved tab
+                $('#myTab a[href="' + activeTab + '"]').tab('show');
+            }
+    
+            // Save the currently active tab into local storage
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var tabName = $(e.target).attr('href');
+                localStorage.setItem('activeTab', tabName);
+            });
+        });
+    </script>
  
 {{-- 
     <script>

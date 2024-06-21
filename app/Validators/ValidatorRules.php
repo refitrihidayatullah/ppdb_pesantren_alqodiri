@@ -64,7 +64,38 @@ class ValidatorRules
     // validator register/tambah user --admin end
 
 
-    // validator register/tambah user --admin first
+    // validator register/tambah user panitia --admin first
+    public static function tambahUserPanitiaRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'panitiaName' => 'required',
+                'panitiaEmail' => 'required|unique:users,email',
+                'panitiaNo_hp' => 'required|numeric|regex:/^[0-9]{10,15}$/|unique:Users,no_hp',
+                'panitiaLevel' => 'required',
+                'panitiaPassword' => 'required',
+                'panitiaPassword_confirm' => 'required|same:panitiaPassword',
+            ],
+            [
+                'panitiaName.required' => 'nama lengkap harus diisi',
+                'panitiaEmail.required' => 'email harus diisi',
+                'panitiaEmail.unique' => 'email sudah terdaftar',
+                'panitiaNo_hp.required' => 'no hp harus diisi',
+                'panitiaNo_hp.unique' => 'no hp sudah terdaftar',
+                'panitiaNo_hp.numeric' => 'no hp harus numeric',
+                'panitiaNo_hp.regex' => 'no hp minimal 10 angka',
+                'panitiaLevel.required' => ' status harus diisi',
+                'panitiaPassword.required' => 'password harus diisi',
+                'panitiaPassword_confirm.required' => 'password harus diisi',
+                'panitiaPassword_confirm.same' => 'password tidak sama',
+            ]
+        );
+    }
+    // validator register/tambah user panitia --admin end
+
+
+    // validator edit/update user --admin first
     public static function updateUserRules(array $data = [])
     {
         return Validator::make(
@@ -83,7 +114,28 @@ class ValidatorRules
             ]
         );
     }
-    // validator register/tambah user --admin end
+    // validator edit/update user --admin end
+
+    // validator edit/update user panitia --admin first
+    public static function updateUserPanitiaRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'updatePanitiaName' => 'required',
+                'updatePanitiaEmail' => 'required',
+                'updatePanitiaNo_hp' => 'required',
+                'updatePanitiaLevel' => 'required',
+            ],
+            [
+                'updatePanitiaName.required' => 'nama lengkap harus diisis',
+                'updatePanitiaEmail.required' => 'email harus diisi',
+                'updatePanitiaNo_hp.required' => 'no hp harus diisi',
+                'updatePanitiaLevel.required' => ' status harus diisi',
+            ]
+        );
+    }
+    // validator edit/update user panitia --admin end
 
     // validator login --client first
     public static function loginRules(array $data = [])

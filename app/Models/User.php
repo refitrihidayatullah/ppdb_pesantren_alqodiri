@@ -100,8 +100,19 @@ class User extends Authenticatable
         return static::where('id_user', $id)->update($data);
     }
 
+    // function update data users panitia
+    public static function updateUserPanitia(array $data = [], $id)
+    {
+        return static::where('id_user', $id)->update($data);
+    }
+
     // function delete data users
     public static function deleteUser($id)
+    {
+        return static::where('id_user', $id)->delete();
+    }
+    // function delete data users panitia
+    public static function deleteUserPanitia($id)
     {
         return static::where('id_user', $id)->delete();
     }

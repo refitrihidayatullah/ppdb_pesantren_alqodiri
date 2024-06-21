@@ -34,18 +34,28 @@ class ManagementUsers extends Controller
         return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
     }
     /**
-     * func menampilkan data create users :view
+     * func menampilkan data create all users :view
      */
     public function create(): View
     {
         $statusUser = [
             'calonsiswa', 'admin', 'superadmin'
         ];
-        return view('Admin.ManagementUsers.create', compact('statusUser'));
+        return view('Admin.ManagementUsers.AllUsers.create', compact('statusUser'));
+    }
+    /**
+     * func menampilkan data create users panitia :view
+     */
+    public function createPanitia(): View
+    {
+        $statusUser = [
+            'calonsiswa', 'admin', 'superadmin'
+        ];
+        return view('Admin.ManagementUsers.PanitiaUsers.create', compact('statusUser'));
     }
 
     /**
-     * func menampilkan data users :view
+     * func menampilkan data edit all users :view
      */
     public function edit($id): View
     {
@@ -53,7 +63,19 @@ class ManagementUsers extends Controller
         $statusUser = [
             'calonsiswa', 'admin', 'superadmin'
         ];
-        return view('Admin.ManagementUsers.edit', compact('statusUser', 'dataUser'));
+        return view('Admin.ManagementUsers.AllUsers.edit', compact('statusUser', 'dataUser'));
+    }
+
+    /**
+     * func menampilkan data edit users panitia :view
+     */
+    public function editPanitia($id): View
+    {
+        $dataPanitia = User::getUserById($id);
+        $statusUser = [
+            'calonsiswa', 'admin', 'superadmin'
+        ];
+        return view('Admin.ManagementUsers.PanitiaUsers.edit', compact('statusUser', 'dataPanitia'));
     }
 
     /**
@@ -82,15 +104,47 @@ class ManagementUsers extends Controller
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
         }
     }
+    /**
+     * func tambah data user panitia :redirectResponse
+     */
+
+    public function storePanitia(Request $request): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::tambahUserPanitiaRules($request->all());
+            if ($validation->fails()) {
+                return redirect('/users/create-panitia')->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+            $password11 = $request->panitiaPassword;
+            $password22 = $request->panitiaPassword_confirm;
+
+            if ($password11 === $password22) {
+                $data = $request->except($password22);
+                $data =
+                    [
+                        'name' => $request->panitiaName,
+                        'email' => $request->panitiaEmail,
+                        'no_hp' => $request->panitiaNo_hp,
+                        'level' => $request->panitiaLevel,
+                        'password' => Hash::make($password11),
+                    ];
+                User::registerUserPanitia($data);
+                return redirect('/users')->with('message', 'success');
+            }
+            return redirect('/users/create-panitia')->with('message', 'failed');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+        }
+    }
 
 
 
 
     /**
-     * func update data user panitia :redirectResponse
+     * func update data alluser :redirectResponse
      */
 
-    public function update(Request $request, string $id)
+    public function update(Request $request,  $id): RedirectResponse
     {
         try {
             $validation = ValidatorRules::updateUserRules($request->all());
@@ -98,20 +152,59 @@ class ManagementUsers extends Controller
                 return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
             }
 
-            // $data = $request->except('_token', '_method');
             $data = [
                 'name' => $request->updateName,
                 'email' => $request->updateEmail,
                 'no_hp' => $request->updateNo_hp,
                 'level' => $request->updateLevel,
             ];
+            $id_user = User::find($id);
+
+            if (!$id_user) {
+                return redirect('/users')->with('message', 'failed');
+            }
             User::updateUser($data, $id);
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
         }
     }
-    public function destroy($id)
+
+
+    /**
+     * func update data user panitia :redirectResponse
+     */
+
+    public function updatePanitia(Request $request,  $id): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::updateUserPanitiaRules($request->all());
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+
+            $data = [
+                'name' => $request->updatePanitiaName,
+                'email' => $request->updatePanitiaEmail,
+                'no_hp' => $request->updatePanitiaNo_hp,
+                'level' => $request->updatePanitiaLevel,
+            ];
+            $id_user = User::find($id);
+
+            if (!$id_user) {
+                return redirect('/users')->with('message', 'failed');
+            }
+            User::updateUserPanitia($data, $id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * func delete data user :redirectResponse
+     */
+    public function destroy($id): RedirectResponse
     {
         try {
             User::deleteUser($id);
@@ -120,20 +213,54 @@ class ManagementUsers extends Controller
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
     }
+    /**
+     * func delete data user panitia :redirectResponse
+     */
+    public function destroyPanitia($id): RedirectResponse
+    {
+        try {
+            User::deleteUserPanitia($id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan' . $e->getMessage());
+        }
+    }
 
-    public function changepassword(Request $request, $id)
+    /**
+     * func change password data user :redirectResponse
+     */
+    public function changepassword(Request $request, $id): RedirectResponse
     {
         try {
             $user = User::find($id);
             if ($user) {
                 $data['password'] = Hash::make($request->password_new);
                 User::updateUser($data, $id);
-                return redirect('/users')->with('success', 'Password updated successfully');
+                return redirect('/users')->with('message', 'success');
             } else {
-                return redirect('/users')->with('failed', 'User not found');
+                return redirect('/users')->with('failed', 'failed');
             }
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Error occurred: ' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+
+    /**
+     * func change password data user panitia :redirectResponse
+     */
+    public function changepasswordPanitia(Request $request, $id): RedirectResponse
+    {
+        try {
+            $users = User::find($id);
+            if ($users) {
+                $data['password'] = Hash::make($request->passwordPanitia_new);
+                User::updateUserPanitia($data, $id);
+                return redirect('/users')->with('message', 'success');
+            } else {
+                return redirect('/users')->with('failed', 'failed');
+            }
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
     }
 }
