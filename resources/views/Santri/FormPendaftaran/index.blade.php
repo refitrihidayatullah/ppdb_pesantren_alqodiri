@@ -11,17 +11,20 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                <input type="text" name="no_induk_santri" class="form-control" placeholder="Masukkan Nomor Induk Santri">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                <input type="text" name="nama_lengkap_santri" class="form-control" placeholder="Masukkan Nama Lengkap Santri*" required>
                             </div>
                         </div>
+                        @php
+                            $tanggal_masuk = date('Y-m-d');
+                        @endphp
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <input type="password" name="Password" class="form-control" placeholder="Password" required>
+                                <input type="text" name="tanggal_masuk" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Tanggal Masuk" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -31,7 +34,7 @@
                         </div>
                     </div>
                 </section>
-                <h4>Your Address</h4>
+                <h4>Data Orang Tua/Wali</h4>
                 <section>
                     <div class="row">
                         <div class="col-lg-6">
@@ -60,33 +63,13 @@
                             </div>
                         </div>
                     </div>
-                </section>
-                <h4>Billing Details</h4>
-                <section>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="creditCard" placeholder="Credit Card Number">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="date" placeholder="Expiration Date">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="owner" placeholder="Credit Card Owner">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <h4>Confirmation</h4>
+                </section>>
+                <h4>Konfirmasi</h4>
                 <section>
                     <div class="row h-100">
                         <div class="col-12 h-100 d-flex flex-column justify-content-center align-items-center">
-                            <h2>You have submitted form successfully!</h2>
-                            <p>Thank you very much for you information. we will procceed accordingly.</p>
+                            <h2>Silahkan dicek Terlebih dahulu formulir sebelum dikirim , jika sudah yakin klik kirim lalu silahkan cetak formulir di halaman dashboard</h2>
+                            <p>Note: isi formulir dengan benar dan jelas</p>
                         </div>
                     </div>
                 </section>
