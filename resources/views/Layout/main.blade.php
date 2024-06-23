@@ -135,6 +135,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{url('/form-pendaftaran')}}">Form Pendaftaran</a></li>
+                            <li><a href="{{url('/provinsi')}}">import provinsi</a></li>
                         </ul>
                     </li>
                     <li>

@@ -2,79 +2,230 @@
 @section('breadcrumb1','Dashboard')
 @section('breadcrumb2','Dashboard')
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <form action="#" id="step-form-horizontal" class="step-form-horizontal">
-            <div>
-                <h4>Data Diri</h4>
-                <section>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="no_induk_santri" class="form-control" placeholder="Masukkan Nomor Induk Santri">
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-validation">
+                    <form class="form-valide" action="{{url('/form-pendaftaran/store')}}" method="POST">
+                        @csrf
+                        <div class="form-group-row mb-3">
+                            <h4>Data Diri</h4>
+                            <p>Keterangan : untuk yang bertanda (*) Wajib diisi</p>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-name">No Induk Santri<span class="text-danger"></span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('no_induk_santri')}}" class="form-control @error('no_induk_santri') is-invalid @enderror" id="val-no_induk_santri" name="no_induk_santri" placeholder="Masukkan No Induk Santri..">
+                                @error('no_induk_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="nama_lengkap_santri" class="form-control" placeholder="Masukkan Nama Lengkap Santri*" required>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-name">Nama Lengkap Santri<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('nama_lengkap_santri')}}" class="form-control @error('nama_lengkap_santri') is-invalid @enderror" id="val-nama_lengkap_santri" name="nama_lengkap_santri" placeholder="Masukkan Nama Lengkap Santri..">
+                                @error('nama_lengkap_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                        @php
-                            $tanggal_masuk = date('Y-m-d');
-                        @endphp
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="tanggal_masuk" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Tanggal Masuk" class="form-control">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-email">Tanggal Masuk Santri<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control @error('tanggal_masuk_santri') is-invalid @enderror" onfocus="(this.type='date')" onblur="(this.type='text')" id="val-tanggal_masuk_santri" value="{{old('tanggal_masuk_santri')}}" name="tanggal_masuk_santri" placeholder="Masukkan Tanggal Masuk..">
+                                @error('tanggal_masuk_santri')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-no_hp">Tempat Lahir Santri<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('tempat_lahir_santri')}}" class="form-control @error('tempat_lahir_santri') is-invalid @enderror" id="val-tempat_lahir_santri" name="tempat_lahir_santri" placeholder="Masukkan Tempat Lahir Santri..">
+                                @error('tempat_lahir_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                    </div>
-                </section>
-                <h4>Data Orang Tua/Wali</h4>
-                <section>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="firstName" class="form-control" placeholder="First Name" required>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-email">Tanggal Lahir Santri<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control @error('tanggal_lahir_santri') is-invalid @enderror" onfocus="(this.type='date')" onblur="(this.type='text')" id="val-tanggal_lahir_santri" value="{{old('tanggal_lahir_santri')}}" name="tanggal_lahir_santri" placeholder="Masukkan Tanggal Lahir Santri..">
+                                @error('tanggal_lahir_santri')
+                                    <div class="form-text text-danger">{{$message}}.</div>
+                                  @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="lastName" class="form-control" placeholder="Last Name" required>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-provinsi">Provinsi<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-provinsi" name="provinsi">
+                                    <option value="">Pilih..</option>
+                     
+                                    <option value="" >xvxcvxc</option>
+  
+                                </select>
+                                @error('provinsi')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <input type="text" name="address" class="form-control" placeholder="Address" required>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-kabupaten">Kabupaten<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-kabupaten" name="kabupaten">
+                                    <option value="">Pilih..</option>
+                     
+                                    <option value="" >xvxcvxc</option>
+  
+                                </select>
+                                @error('kabupaten')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="city" class="form-control" placeholder="City" required>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-kecamatan">Kecamatan<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-kecamatan" name="kecamatan">
+                                    <option value="">Pilih..</option>
+                     
+                                    <option value="" >xvxcvxc</option>
+  
+                                </select>
+                                @error('kecamatan')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input type="text" name="zip" class="form-control" placeholder="ZIP Code" required>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-kelurahan">Kelurahan<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-kelurahan" name="kelurahan">
+                                    <option value="">Pilih..</option>
+                     
+                                    <option value="" >xvxcvxc</option>
+  
+                                </select>
+                                @error('kelurahan')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
                             </div>
                         </div>
-                    </div>
-                </section>>
-                <h4>Konfirmasi</h4>
-                <section>
-                    <div class="row h-100">
-                        <div class="col-12 h-100 d-flex flex-column justify-content-center align-items-center">
-                            <h2>Silahkan dicek Terlebih dahulu formulir sebelum dikirim , jika sudah yakin klik kirim lalu silahkan cetak formulir di halaman dashboard</h2>
-                            <p>Note: isi formulir dengan benar dan jelas</p>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-no_hp">Dusun Santri<span class="text-danger"></span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('dusun_santri')}}" class="form-control @error('dusun_santri') is-invalid @enderror" id="val-dusun_santri" name="dusun_santri" placeholder="Masukkan Dusun Santri..">
+                                @error('dusun_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
                         </div>
-                    </div>
-                </section>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-jenjang_pendidikan">Jenjang Pendidikan<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-jenjang_pendidikan" name="jenjang_pendidikan">
+                                    <option value="">Pilih..</option>                    
+                                    <option value="" >xvxcvxc</option>
+                                </select>
+                                @error('jenjang_pendidikan')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+                        <div class="form-group-row mb-3">
+                            <h4>Data Orang Tua/Wali</h4>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-name">Nama Lengkap Ayah<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('nama_ayah')}}" class="form-control @error('nama_ayah') is-invalid @enderror" id="val-nama_ayah" name="nama_ayah" placeholder="Masukkan Nama Lengkap Ayah..">
+                                @error('nama_ayah')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-pekerjaan_ayah">Pekerjaan Ayah<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-pekerjaan_ayah" name="pekerjaan_ayah">
+                                    <option value="">Pilih..</option>                    
+                                    <option value="" >xvxcvxc</option>
+                                </select>
+                                @error('pekerjaan_ayah')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-name">Nama Lengkap Ibu<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="text" value="{{old('nama_ibu')}}" class="form-control @error('nama_ibu') is-invalid @enderror" id="val-nama_ibu" name="nama_ibu" placeholder="Masukkan Nama Lengkap Ibu..">
+                                @error('nama_ibu')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-pekerjaan_ibu">Pekerjaan Ibu<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-pekerjaan_ibu" name="pekerjaan_ibu">
+                                    <option value="">Pilih..</option>                    
+                                    <option value="" >xvxcvxc</option>
+                                </select>
+                                @error('pekerjaan_ibu')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-no_telp_ortu">No Telp<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="number" value="{{old('no_telp_ortu')}}" class="form-control @error('no_telp_ortu') is-invalid @enderror" id="val-no_telp_ortu" name="no_telp_ortu" placeholder="Masukkan No Telp..">
+                                @error('no_telp_ortu')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-lg-8 ml-auto">
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <a href="{{url('/users')}}" type="button" class="btn btn-secondary">Kembali</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection

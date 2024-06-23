@@ -48,5 +48,7 @@ Route::delete('/users/panitia/{id}', [ManagementUsers::class, 'destroyPanitia'])
 // santri first
 Route::get('/dashboard-santri', [DashboardSantriController::class, 'index']);
 Route::get('/form-pendaftaran', [DashboardSantriController::class, 'formPendaftaran']);
+Route::post('/form-pendaftaran/store', [DashboardSantriController::class, 'storePendaftaran']);
+Route::get('/provinsi', [DashboardSantriController::class, 'provinsi']);
 
 //santri end

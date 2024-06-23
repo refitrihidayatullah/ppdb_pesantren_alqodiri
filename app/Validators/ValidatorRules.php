@@ -153,4 +153,46 @@ class ValidatorRules
         );
     }
     // validator login --client end
+
+
+    // validator formulir pendaftaran santri --client first
+    public static function formulirRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'nama_lengkap_santri' => 'required',
+                'tanggal_masuk_santri' => 'required',
+                'tempat_lahir_santri' => 'required',
+                'tanggal_lahir_santri' => 'required',
+                'provinsi' => 'required',
+                'kabupaten' => 'required',
+                'kecamatan' => 'required',
+                'kelurahan' => 'required',
+                'jenjang_pendidikan' => 'required',
+                'nama_ayah' => 'required',
+                'pekerjaan_ayah' => 'required',
+                'nama_ibu' => 'required',
+                'pekerjaan_ibu' => 'required',
+                'no_telp_ortu' => 'required',
+            ],
+            [
+                'nama_lengkap_santri.required' => 'nama santri harus diisi',
+                'tanggal_masuk_santri.required' => 'tanggal masuk santri harus diisi',
+                'tempat_lahir_santri.required' => 'tempat lahir santri harus diisi',
+                'tanggal_lahir_santri.required' => 'tanggal lahir santri harus diisi',
+                'provinsi.required' => 'provinsi harus diisi',
+                'kabupaten.required' => 'kabupaten harus diisi',
+                'kecamatan.required' => 'kecamatan harus diisi',
+                'kelurahan.required' => 'kelurahan harus diisi',
+                'jenjang_pendidikan.required' => 'jenjang pendidikan harus diisi',
+                'nama_ayah.required' => 'nama ayah harus diisi',
+                'pekerjaan_ayah.required' => 'pekerjaan ayah harus diisi',
+                'nama_ibu.required' => 'nama ibu harus diisi',
+                'pekerjaan_ibu.required' => 'pekerjaan ibu harus diisi',
+                'no_telp_ortu.required' => 'no telp orang tua harus diisi',
+            ]
+        );
+    }
+    // validator formulir pendaftaran santri --client end
 }
