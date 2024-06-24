@@ -11,8 +11,11 @@ class Provinsi extends Model
 
     protected $table = 'provinsis';
     protected $primaryKey = 'id_provinsi';
+    public $incrementing = false;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'name'
+        'id_provinsi',
+        'name',
     ];
 }

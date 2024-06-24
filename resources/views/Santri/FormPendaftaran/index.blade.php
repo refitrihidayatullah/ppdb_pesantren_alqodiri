@@ -68,10 +68,7 @@
                             <label class="col-lg-4 col-form-label" for="val-provinsi">Provinsi<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="val-provinsi" name="provinsi">
-                                    <option value="">Pilih..</option>
-                     
-                                    <option value="" >xvxcvxc</option>
+                                <select class="form-control" id="selectProvinsi" name="provinsi">
   
                                 </select>
                                 @error('provinsi')
@@ -84,10 +81,8 @@
                             <label class="col-lg-4 col-form-label" for="val-kabupaten">Kabupaten<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="val-kabupaten" name="kabupaten">
-                                    <option value="">Pilih..</option>
-                     
-                                    <option value="" >xvxcvxc</option>
+                                <select class="form-control" id="selectKabupaten" name="kabupaten">
+                                   
   
                                 </select>
                                 @error('kabupaten')

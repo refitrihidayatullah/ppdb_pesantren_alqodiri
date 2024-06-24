@@ -11,6 +11,7 @@
     <!-- Custom Stylesheet -->
     <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/plugins/jquery-steps/css/jquery.steps.css')}}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
   
    
@@ -242,15 +243,15 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     
     <script src="{{asset('assets/plugins/common/common.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.min.js')}}"></script>
     <script src="{{asset('assets/js/settings.js')}}"></script>
     <script src="{{asset('assets/js/gleek.js')}}"></script>
     <script src="{{asset('assets/js/styleSwitcher.js')}}"></script>
-
+    
     <script src="{{asset('assets/plugins/tables/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('assets/plugins/tables/js/datatable-init/datatable-basic.min.js')}}"></script>
@@ -260,7 +261,46 @@
     <script src="{{asset('assets/plugins/jquery-steps/build/jquery.steps.min.js')}}"></script>
     <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins-init/jquery-steps-init.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- select2 untuk select wilayah indonesia --}}
+    <script>
+        $(document).ready(function(){
+            $('#selectProvinsi').select2({
+               placeholder: 'Pilih Provinsi',
+               ajax:{
+                url:"{{url('selectProvinsi')}}",
+                dataType: 'json',
+                delay: 250,
+                processResults: function(data){
+                    if (data.data && data.data.length > 0) {
+                        return {
+                            results: $.map(data.data, function(item){
+                                return{
+                                    id: item.id_provinsi,
+                                    text: item.name,
+                                }
+                            })
+                        }
+                    } else {
+                        return {
+                            results: []
+                        }
+                    }
+                },
+                cache: true
+               }
+            }).on('select2:open', function() {
+                $('.select2-search__field').attr('placeholder', 'Cari...');
+            });
+            // $('#selectKabupaten').select2();
+            // $('#selectKecamatan').select2();
+            // $('#selectKelurahan').select2();
+        });   
+    </script>
 
+    
+    
+    
     <script>
         $(document).ready(function () {
             // Check if there's a saved tab in local storage
@@ -296,8 +336,6 @@
         }
     
     </script> --}}
-
-
 
 
 </body>
