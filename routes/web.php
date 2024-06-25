@@ -51,8 +51,7 @@ Route::get('/form-pendaftaran', [DashboardSantriController::class, 'formPendafta
 Route::post('/form-pendaftaran/store', [DashboardSantriController::class, 'storePendaftaran']);
 Route::get('/provinsi', [DashboardSantriController::class, 'provinsi']);
 Route::post('/provinsi/store', [DashboardSantriController::class, 'storeProvinsi']);
-// select2 wilayah indonesia first
-Route::get('selectProvinsi', [DashboardSantriController::class, 'selectProvinsi']);
-Route::get('selectKabupaten/{id}', [DashboardSantriController::class, 'selectKabupaten']);
-// select2 wilayah indonesia end
-//santri end
+
+Route::post('/getkabupaten', [DashboardSantriController::class, 'getkabupaten'])->name('getkabupaten');
+Route::post('/getkecamatan', [DashboardSantriController::class, 'getkecamatan'])->name('getkecamatan');
+Route::post('/getkelurahan', [DashboardSantriController::class, 'getkelurahan'])->name('getkelurahan');

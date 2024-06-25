@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Pesantren Al Qodiri 1 Jember</title>
     <!-- Favicon icon -->
     <!-- <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png'"> -->
     <!-- Custom Stylesheet -->
     <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/plugins/jquery-steps/css/jquery.steps.css')}}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
   
    
@@ -243,8 +243,8 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
     
     <script src="{{asset('assets/plugins/common/common.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.min.js')}}"></script>
@@ -261,41 +261,89 @@
     <script src="{{asset('assets/plugins/jquery-steps/build/jquery.steps.min.js')}}"></script>
     <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins-init/jquery-steps-init.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
     {{-- select2 untuk select wilayah indonesia --}}
     <script>
-        $(document).ready(function(){
-            $('#selectProvinsi').select2({
-               placeholder: 'Pilih Provinsi',
-               ajax:{
-                url:"{{url('selectProvinsi')}}",
-                dataType: 'json',
-                delay: 250,
-                processResults: function(data){
-                    if (data.data && data.data.length > 0) {
-                        return {
-                            results: $.map(data.data, function(item){
-                                return{
-                                    id: item.id_provinsi,
-                                    text: item.name,
-                                }
-                            })
-                        }
-                    } else {
-                        return {
-                            results: []
-                        }
-                    }
-                },
-                cache: true
-               }
-            }).on('select2:open', function() {
-                $('.select2-search__field').attr('placeholder', 'Cari...');
+        $(function ()
+        {
+            $.ajaxSetup({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
             });
-            // $('#selectKabupaten').select2();
-            // $('#selectKecamatan').select2();
-            // $('#selectKelurahan').select2();
-        });   
+
+        $(function(){
+            // provinsi
+            $('#provinsi').on('change', function(){
+                let id_provinsi = $(this).val();
+                // console.log(id_provinsi);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{route('getkabupaten')}}",
+                    data: {id_provinsi:id_provinsi},
+                    cache : false,
+
+                    success: function(msg)
+                    {
+                        $('#kabupaten').html(msg);
+                        $('#kecamatan').html('');
+                        $('#kelurahan').html('');
+              
+                    },
+                    error: function(data){
+                        console.log('error:',data);
+                    },
+                })
+            }); 
+
+
+             // kabupaten
+             $('#kabupaten').on('change', function(){
+                let id_kabupaten = $(this).val();
+                // console.log(id_kabupaten);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{route('getkecamatan')}}",
+                    data: {id_kabupaten:id_kabupaten},
+                    cache : false,
+
+                    success: function(msg)
+                    {
+                        $('#kecamatan').html(msg);
+                        $('#kelurahan').html('');
+              
+                    },
+                    error: function(data){
+                        console.log('error:',data);
+                    },
+                })
+            });
+
+                   // kecamatan
+                   $('#kecamatan').on('change', function(){
+                let id_kecamatan = $(this).val();
+                // console.log(id_kecamatan);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{route('getkelurahan')}}",
+                    data: {id_kecamatan:id_kecamatan},
+                    cache : false,
+
+                    success: function(msg)
+                    {
+                        $('#kelurahan').html(msg);
+              
+                    },
+                    error: function(data){
+                        console.log('error:',data);
+                    },
+                })
+            }); 
+
+            
+        });
+
+
+        });
     </script>
 
     

@@ -33,6 +33,24 @@
                               @enderror
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-provinsi">Jenis Kelamin<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="jenis_kelamin_santri" name="jenis_kelamin_santri">
+                                 <option value="">Pilih Jenis Kelamin...</option>
+                                 @foreach ($jenis_kelamin as $kelamin)
+                                 <option value="{{$kelamin}}">{{$kelamin}}</option>
+                                 @endforeach                     
+  
+                                </select>
+                                @error('jenis_kelamin_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label" for="val-email">Tanggal Masuk Santri<span class="text-danger">*</span>
                             </label>
@@ -63,26 +81,29 @@
                                   @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label" for="val-provinsi">Provinsi<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="selectProvinsi" name="provinsi">
+                                <select class="form-control" id="provinsi" name="provinsi">
+                                 <option value="">Pilih Provinsi...</option>
+                                 @foreach ($provinsis as $provinsi)
+                                     <option value="{{$provinsi->id_provinsi}}">{{$provinsi->name}}-{{$provinsi->id_provinsi}}</option>
+                                 @endforeach
   
                                 </select>
-                                @error('provinsi')
+                                @error('kabupaten')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror
                             </div>
                         </div>
 
+
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label" for="val-kabupaten">Kabupaten<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="selectKabupaten" name="kabupaten">
-                                   
+                                <select class="form-control" id="kabupaten" name="kabupaten">
   
                                 </select>
                                 @error('kabupaten')
@@ -95,10 +116,8 @@
                             <label class="col-lg-4 col-form-label" for="val-kecamatan">Kecamatan<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="val-kecamatan" name="kecamatan">
-                                    <option value="">Pilih..</option>
-                     
-                                    <option value="" >xvxcvxc</option>
+                                <select class="form-control" id="kecamatan" name="kecamatan">
+                                    
   
                                 </select>
                                 @error('kecamatan')
@@ -108,13 +127,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="val-kelurahan">Kelurahan<span class="text-danger">*</span>
+                            <label class="col-lg-4 col-form-label" for="kelurahan">Kelurahan<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="val-kelurahan" name="kelurahan">
-                                    <option value="">Pilih..</option>
-                     
-                                    <option value="" >xvxcvxc</option>
+                                <select class="form-control" id="kelurahan" name="kelurahan">
+                                    
   
                                 </select>
                                 @error('kelurahan')
@@ -135,12 +152,14 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="val-jenjang_pendidikan">Jenjang Pendidikan<span class="text-danger">*</span>
+                            <label class="col-lg-4 col-form-label" for="val-jenjang_pendidikan">Jenjang Pendidikan Yang Dipilih<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
                                 <select class="form-control" id="val-jenjang_pendidikan" name="jenjang_pendidikan">
-                                    <option value="">Pilih..</option>                    
-                                    <option value="" >xvxcvxc</option>
+                                    <option value="">Pilih..</option>  
+                                    @foreach ($jenjang_pendidikan as $pendidikan)        
+                                    <option value="{{$pendidikan}}" >{{$pendidikan}}</option>
+                                    @endforeach                  
                                 </select>
                                 @error('jenjang_pendidikan')
                                 <div class="form-text text-danger">{{$message}}.</div>
@@ -166,8 +185,10 @@
                             </label>
                             <div class="col-lg-6">
                                 <select class="form-control" id="val-pekerjaan_ayah" name="pekerjaan_ayah">
-                                    <option value="">Pilih..</option>                    
-                                    <option value="" >xvxcvxc</option>
+                                    <option value="" >Pilih Pekerjaan..</option>
+                                    @foreach ($pekerjaan_ortu as $pekerjaan)
+                                    <option value="{{$pekerjaan}}">{{$pekerjaan}}</option>
+                                    @endforeach
                                 </select>
                                 @error('pekerjaan_ayah')
                                 <div class="form-text text-danger">{{$message}}.</div>
@@ -191,8 +212,10 @@
                             </label>
                             <div class="col-lg-6">
                                 <select class="form-control" id="val-pekerjaan_ibu" name="pekerjaan_ibu">
-                                    <option value="">Pilih..</option>                    
-                                    <option value="" >xvxcvxc</option>
+                                    <option value="" >Pilih Pekerjaan..</option>
+                                    @foreach ($pekerjaan_ortu as $pekerjaan)
+                                    <option value="{{$pekerjaan}}">{{$pekerjaan}}</option>
+                                    @endforeach
                                 </select>
                                 @error('pekerjaan_ibu')
                                 <div class="form-text text-danger">{{$message}}.</div>
@@ -205,6 +228,22 @@
                             <div class="col-lg-6">
                                 <input type="number" value="{{old('no_telp_ortu')}}" class="form-control @error('no_telp_ortu') is-invalid @enderror" id="val-no_telp_ortu" name="no_telp_ortu" placeholder="Masukkan No Telp..">
                                 @error('no_telp_ortu')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-pekerjaan_ayah">Informasi PPDB<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="val-informasi_ppdb" name="informasi_ppdb">
+                                    <option value="" >Pilih..</option>
+                                    @foreach ($informasi_ppdb as $info_ppd)
+                                    <option value="{{$info_ppd}}">{{$info_ppd}}</option>
+                                    @endforeach
+                                </select>
+                                @error('informasi_ppdb')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror
                             </div>

@@ -162,6 +162,7 @@ class ValidatorRules
             $data,
             [
                 'nama_lengkap_santri' => 'required',
+                'jenis_kelamin_santri' => 'required',
                 'tanggal_masuk_santri' => 'required',
                 'tempat_lahir_santri' => 'required',
                 'tanggal_lahir_santri' => 'required',
@@ -175,9 +176,11 @@ class ValidatorRules
                 'nama_ibu' => 'required',
                 'pekerjaan_ibu' => 'required',
                 'no_telp_ortu' => 'required',
+                'informasi_ppdb' => 'required',
             ],
             [
                 'nama_lengkap_santri.required' => 'nama santri harus diisi',
+                'jenis_kelamin_santri.required' => 'jenis kelamin harus diisi',
                 'tanggal_masuk_santri.required' => 'tanggal masuk santri harus diisi',
                 'tempat_lahir_santri.required' => 'tempat lahir santri harus diisi',
                 'tanggal_lahir_santri.required' => 'tanggal lahir santri harus diisi',
@@ -191,6 +194,7 @@ class ValidatorRules
                 'nama_ibu.required' => 'nama ibu harus diisi',
                 'pekerjaan_ibu.required' => 'pekerjaan ibu harus diisi',
                 'no_telp_ortu.required' => 'no telp orang tua harus diisi',
+                'informasi_ppdb.required' => 'informasi ppdb harus diisi',
             ]
         );
     }

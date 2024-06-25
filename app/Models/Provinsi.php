@@ -18,4 +18,9 @@ class Provinsi extends Model
         'id_provinsi',
         'name',
     ];
+
+    public static function getDataProvinsi()
+    {
+        return static::all();
+    }
 }

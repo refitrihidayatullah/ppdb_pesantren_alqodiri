@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calon_santris', function (Blueprint $table) {
-            $table->id('id_santri');
+        Schema::create('informasi_ppdbs', function (Blueprint $table) {
+            $table->id('id_informasi_ppdb');
             $table->unsignedBigInteger('user_id');
-            $table->dateTime('tanggal_daftar');
-            $table->string('nama_lengkap_santri');
-            $table->string('tempat_lahir_santri');
-            $table->date('tanggal_lahir_santri');
-            $table->string('jenis_kelamin_santri');
-            $table->string('jenjang_pendidikan');
+            $table->string('name');
             $table->timestamps();
             $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
         });
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calon_santris');
+        Schema::dropIfExists('informasi_ppdbs');
     }
 };
