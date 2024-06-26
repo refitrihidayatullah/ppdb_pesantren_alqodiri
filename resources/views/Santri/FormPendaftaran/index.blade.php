@@ -2,6 +2,7 @@
 @section('breadcrumb1','Dashboard')
 @section('breadcrumb2','Dashboard')
 @section('content')
+
 <div class="row justify-content-center">
     <div class="col-lg-12">
         <div class="card">
@@ -158,7 +159,7 @@
                                 <select class="form-control" id="val-jenjang_pendidikan" name="jenjang_pendidikan">
                                     <option value="">Pilih..</option>  
                                     @foreach ($jenjang_pendidikan as $pendidikan)        
-                                    <option value="{{$pendidikan}}" >{{$pendidikan}}</option>
+                                    <option value="{{$pendidikan}}">{{$pendidikan}}</option>
                                     @endforeach                  
                                 </select>
                                 @error('jenjang_pendidikan')

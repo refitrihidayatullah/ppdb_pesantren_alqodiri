@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Provinsi;
+use Carbon\Carbon;
 // use Excel;
+use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Illuminate\View\View;
+use App\Models\CalonSantri;
 use Illuminate\Http\Request;
+use App\Models\InformasiPpdb;
 use App\Imports\ProvinsiImport;
-use Illuminate\Cache\RedisStore;
+use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
+use Illuminate\Support\Facades\DB;
+use App\Models\OrangTuaCalonSantri;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -30,6 +35,8 @@ class DashboardSantriController extends Controller
      */
     public function formPendaftaran(): View
     {
+
+
         $jenjang_pendidikan =
             [
                 'MA Al-Qodiri', 'STIKES Bhakti Al-Qodiri', 'MTs Unggulan',
@@ -56,15 +63,58 @@ class DashboardSantriController extends Controller
             return redirect('/form-pendaftaran')->withErrors($validation)->with('message', 'failed')->withInput();
         }
         $user_id =  Auth::user()->id_user;
+        $today = Carbon::now('Asia/Jakarta')->format('Y-m-d');
         $calonSantri = [
             'user_id' => $user_id,
-            'tanggal_daftar' => $request->tanggal_daftar,
+            'no_induk_santri' => $request->no_induk_santri ?? '-',
+            'tanggal_daftar' => $request->tanggal_masuk_santri == $today ? $request->tanggal_masuk_santri : $today,
             'nama_lengkap_santri' => $request->nama_lengkap_santri,
             'tempat_lahir_santri' => $request->tempat_lahir_santri,
             'tanggal_lahir_santri' => $request->tanggal_lahir_santri,
             'jenis_kelamin_santri' => $request->jenis_kelamin_santri,
+            'jenjang_pendidikan' => $request->jenjang_pendidikan,
         ];
-        $alamatSantri = [];
+        $alamatCalonSantri = [
+            'user_id' => $user_id,
+            'provinsi_id' => $request->provinsi,
+            'kabupaten_id' => $request->kabupaten,
+            'kecamatan_id' => $request->kecamatan,
+            'kelurahan_id' => $request->kelurahan,
+            'dusun_santri' => $request->dusun_santri ?? '-',
+        ];
+        $orangtuaCalonSantri = [
+            'user_id' => $user_id,
+            'nama_ayah' => $request->nama_ayah,
+            'pekerjaan_ayah' => $request->pekerjaan_ayah,
+            'nama_ibu' => $request->nama_ibu,
+            'pekerjaan_ibu' => $request->pekerjaan_ibu,
+            'no_telp_ortu' => $request->no_telp_ortu,
+
+        ];
+        $informasiPpdb = [
+            'user_id' => $user_id,
+            'name' => $request->informasi_ppdb
+        ];
+        // dd([$calonSantri, $alamatCalonSantri, $orangtuaCalonSantri, $informasiPpdb]);
+        // die;
+
+        try {
+            DB::beginTransaction();
+            // insert calon santri
+            CalonSantri::insertCalonSantri($calonSantri);
+            // insert alamat calon santri
+            AlamatCalonSantri::insertAlamatCalonSantri($alamatCalonSantri);
+            // insert orangtua calon santri
+            OrangTuaCalonSantri::insertOrangTuaCalonSiswa($orangtuaCalonSantri);
+            // insert informasi ppdb
+            InformasiPpdb::insertInformasiPpdb($informasiPpdb);
+            DB::commit();
+            return redirect('/dashboard-santri')->with('success', 'Pendaftaran Berhasil Silahkan Cetak Bukti pendaftaran');
+        } catch (\Exception $e) {
+
+            DB::rollback();
+            return redirect('/form-pendaftaran')->with('failed', 'Terjadi Kesalahan' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -79,7 +129,7 @@ class DashboardSantriController extends Controller
     /**
      * func menambahkan import provinsi
      */
-    public function storerovinsi(Request $request)
+    public function storeProvinsi(Request $request)
     {
         // dd($request->all());
         Excel::import(new ProvinsiImport, $request->file('import_file'));

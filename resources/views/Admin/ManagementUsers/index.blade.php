@@ -46,7 +46,7 @@
                                                     <tbody>
                                                         @foreach ($dataAllUsers as $allUsers)    
                                                         <tr>
-                                                            <td>{{$loop->iteration}}</td>
+                                                            <td>{{$loop->iteration??''}}</td>
                                                             <td>{{$allUsers->name??''}}</td>
                                                             <td>{{$allUsers->email??''}}</td>
                                                             <td>{{$allUsers->no_hp??''}}</td>
@@ -154,9 +154,67 @@
                     </div>
                     <div class="tab-pane fade" id="putrausers">
                         <div class="p-t-15">
-                            <h4>This is contact title</h4>
-                            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
-                            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                                <a href="{{url('/users/create-panitia')}}" class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></a>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered zero-configuration">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Nama</th>
+                                                            <th>Email</th>
+                                                            <th>No Hp</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr>
+                                                            <td>{{$loop->iteration??''}}</td>
+                                                            <td>{{$allPanitia->name??''}}</td>
+                                                            <td>{{$allPanitia->email??''}}</td>
+                                                            <td>{{$allPanitia->no_hp??''}}</td>
+                                                            <td>
+                                                                @if ($allPanitia->level === "superadmin")                                                                  
+                                                                <span class="badge badge-dark">{{$allPanitia->level??''}}</span>
+                                                                @elseif($allPanitia->level === "admin")
+                                                                <span class="badge badge-primary">{{$allPanitia->level??''}}</span>
+                                                                @else            
+                                                                <span class="badge badge-success">{{$allPanitia->level??''}}</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$allPanitia->id_user}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" href="
+                                                                {{url("/users/".$allPanitia->id_user."/edit-panitia")}}">Edit</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$allPanitia->id_user}}" href="#">Delete</a>
+
+                                                            </div>
+                                                            </td>
+                                                        </tr>
+                                           
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Nama</th>
+                                                            <th>Email</th>
+                                                            <th>No Hp</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="putriusers">

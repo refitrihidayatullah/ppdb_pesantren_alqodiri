@@ -16,12 +16,14 @@ class CalonSantri extends Model
     protected $primaryKey = 'id_santri';
 
     protected $fillable = [
+        'no_induk_santri',
         'user_id',
         'tanggal_daftar',
         'nama_lengkap_santri',
         'tempat_lahir_santri',
         'tanggal_lahir_santri',
         'jenis_kelamin_santri',
+        'jenjang_pendidikan',
     ];
 
     //insert calon santri
