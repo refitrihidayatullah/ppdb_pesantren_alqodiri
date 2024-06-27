@@ -40,30 +40,42 @@
                                                             <th>Email</th>
                                                             <th>No Hp</th>
                                                             <th>Status</th>
+                                                            <th>Status Validasi</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($dataAllUsers as $allUsers)    
+                                                        @foreach ($dataAllUsers as $index => $allUsers)   
                                                         <tr>
-                                                            <td>{{$loop->iteration??''}}</td>
-                                                            <td>{{$allUsers->name??''}}</td>
-                                                            <td>{{$allUsers->email??''}}</td>
-                                                            <td>{{$allUsers->no_hp??''}}</td>
+                                                            <td>{{$index +1 ??''}}</td>
+                                                            <td>{{$allUsers['name']??''}}</td>
+                                                            <td>{{$allUsers['email']??''}}</td>
+                                                            <td>{{$allUsers['no_hp']??''}}</td>
                                                             <td>
-                                                                @if ($allUsers->level === "superadmin")                                                                  
-                                                                <span class="badge badge-dark">{{$allUsers->level??''}}</span>
-                                                                @elseif($allUsers->level === "admin")
-                                                                <span class="badge badge-primary">{{$allUsers->level??''}}</span>
+                                                                @if ($allUsers['level'] === "superadmin")                                                                  
+                                                                <span class="badge badge-dark">{{$allUsers['level']??''}}</span>
+                                                                @elseif($allUsers['level'] === "admin")
+                                                                <span class="badge badge-primary">{{$allUsers['level']??''}}</span>
                                                                 @else            
-                                                                <span class="badge badge-success">{{$allUsers->level??''}}</span>
+                                                                <span class="badge badge-success">{{$allUsers['level']??''}}</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($allUsers['status_validasi']['nama_status_validasi'] === "accessDenied")                                                                  
+                                                                <span class="badge badge-dark">{{$allUsers['status_validasi']['nama_status_validasi']??''}}</span>
+                                                                @elseif($allUsers['status_validasi']['nama_status_validasi'] === "pending")
+                                                                <span class="badge badge-warning">{{$allUsers['status_validasi']['nama_status_validasi']??''}}</span>
+                                                                @elseif($allUsers['status_validasi']['nama_status_validasi'] === "inProgress")
+                                                                <span class="badge badge-primary">{{$allUsers['status_validasi']['nama_status_validasi']??''}}</span>
+                                                                @else            
+                                                                <span class="badge badge-success">{{$allUsers['status_validasi']['nama_status_validasi']??''}}</span>
                                                                 @endif
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers->id_user}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
-                                                            <div class="dropdown-menu"><a class="dropdown-item" href="{{url("/users/".$allUsers->id_user."/edit")}}">Edit</a>
-                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers->id_user}}" href="#">Delete</a>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <div class="dropdown-menu"><a class="dropdown-item" href="{{url("/users/".$allUsers['id_user']."/edit")}}">Edit</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers['id_user']}}" href="#">Delete</a>
                                                             </div>
                                                             </td>
                                                         </tr>
@@ -76,6 +88,7 @@
                                                             <th>Email</th>
                                                             <th>No Hp</th>
                                                             <th>Status</th>
+                                                            <th>Status Validasi</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>
@@ -107,27 +120,27 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($dataAllPanitia as $allPanitia)    
+                                                        @foreach ($dataAllPanitia as $index => $allPanitia)    
                                                         <tr>
-                                                            <td>{{$loop->iteration}}</td>
-                                                            <td>{{$allPanitia->name??''}}</td>
-                                                            <td>{{$allPanitia->email??''}}</td>
-                                                            <td>{{$allPanitia->no_hp??''}}</td>
+                                                            <td>{{$index +1 ??''}}</td>
+                                                            <td>{{$allPanitia['name']??''}}</td>
+                                                            <td>{{$allPanitia['email']??''}}</td>
+                                                            <td>{{$allPanitia['no_hp']??''}}</td>
                                                             <td>
-                                                                @if ($allPanitia->level === "superadmin")                                                                  
-                                                                <span class="badge badge-dark">{{$allPanitia->level??''}}</span>
-                                                                @elseif($allPanitia->level === "admin")
-                                                                <span class="badge badge-primary">{{$allPanitia->level??''}}</span>
+                                                                @if ($allPanitia['level'] === "superadmin")                                                                  
+                                                                <span class="badge badge-dark">{{$allPanitia['level']??''}}</span>
+                                                                @elseif($allPanitia['level'] === "admin")
+                                                                <span class="badge badge-primary">{{$allPanitia['level']??''}}</span>
                                                                 @else            
-                                                                <span class="badge badge-success">{{$allPanitia->level??''}}</span>
+                                                                <span class="badge badge-success">{{$allPanitia['level']??''}}</span>
                                                                 @endif
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$allPanitia->id_user}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$allPanitia['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
                                                             <div class="dropdown-menu"><a class="dropdown-item" href="
-                                                                {{url("/users/".$allPanitia->id_user."/edit-panitia")}}">Edit</a>
-                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$allPanitia->id_user}}" href="#">Delete</a>
+                                                                {{url("/users/".$allPanitia['id_user']."/edit-panitia")}}">Edit</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$allPanitia['id_user']}}" href="#">Delete</a>
 
                                                             </div>
                                                             </td>
@@ -174,7 +187,7 @@
                                                     <tbody>
                                                         
                                                         <tr>
-                                                            <td>{{$loop->iteration??''}}</td>
+                                                            {{-- <td>{{$loop->iteration??''}}</td>
                                                             <td>{{$allPanitia->name??''}}</td>
                                                             <td>{{$allPanitia->email??''}}</td>
                                                             <td>{{$allPanitia->no_hp??''}}</td>
@@ -195,7 +208,7 @@
                                                                 <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$allPanitia->id_user}}" href="#">Delete</a>
 
                                                             </div>
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                            
                                                     </tbody>
@@ -246,7 +259,7 @@
         modal delete data all users - management users first
     ***********************************-->
     @foreach ($dataAllUsers as $allUsers)
-    <div class="modal fade bd-example-modal-lg formModal" id="deleteUserModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg formModal" id="deleteUserModal{{$allUsers['id_user']}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-header">
@@ -256,7 +269,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="basic-form p-4">
-                        <form action="{{url("/users/".$allUsers->id_user)}}" method="POST">
+                        <form action="{{url("/users/".$allUsers['id_user'])}}" method="POST">
                             @csrf
                             @method('delete')
                             <h5>Anda Yakin Akan Menghapus?</h5>
@@ -281,7 +294,7 @@
         modal delete data users panitia - management users first
     ***********************************-->
     @foreach ($dataAllPanitia as $allPanitia)
-    <div class="modal fade bd-example-modal-lg formModal" id="deleteUserPanitiaModal{{$allPanitia->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg formModal" id="deleteUserPanitiaModal{{$allPanitia['id_user']}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-header">
@@ -291,7 +304,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="basic-form p-4">
-                        <form action="{{url("/users/panitia/".$allPanitia->id_user)}}" method="POST">
+                        <form action="{{url("/users/panitia/".$allPanitia['id_user'])}}" method="POST">
                             @csrf
                             @method('delete')
                             <h5>Anda Yakin Akan Menghapus?</h5>
@@ -317,7 +330,7 @@
         modal change password all users - management users first
     ***********************************-->
     @foreach ($dataAllUsers as $allUsers)
-    <div class="modal fade bd-example-modal-lg formModal" id="changePasswordModal{{$allUsers->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg formModal" id="changePasswordModal{{$allUsers['id_user']}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -327,7 +340,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="basic-form p-4">
-                        <form action="{{url("/users/changepassword/".$allUsers->id_user)}}" method="POST">
+                        <form action="{{url("/users/changepassword/".$allUsers['id_user'])}}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="form-row">
@@ -361,7 +374,7 @@
         modal change password users panitia - management users first
         ***********************************-->
         @foreach ($dataAllPanitia as $allPanitia)
-    <div class="modal fade bd-example-modal-lg formModal" id="changePasswordPanitiaModal{{$allPanitia->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg formModal" id="changePasswordPanitiaModal{{$allPanitia['id_user']}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -371,7 +384,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="basic-form p-4">
-                        <form action="{{url("/users/changepassword-panitia/".$allPanitia->id_user)}}" method="POST">
+                        <form action="{{url("/users/changepassword-panitia/".$allPanitia['id_user'])}}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="form-row">

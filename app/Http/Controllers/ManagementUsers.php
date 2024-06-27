@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Validators\ValidatorRules;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Models\StatusValidasi;
+use App\Validators\ValidatorRules;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 
 class ManagementUsers extends Controller
 {
@@ -18,11 +20,17 @@ class ManagementUsers extends Controller
 
     public function index(): View
     {
+
         // get data panitia[admin,superadmin]
-        $dataAllPanitia = User::getAllPanitia();
+        // $dataAllPanitia = User::getAllPanitia();
+        $AllPanitia = User::with('statusValidasi')->where('level', 'admin')->orWhere('level', 'superadmin')->get();
+        $dataAllPanitia = $AllPanitia->map(function ($panitia) {
+            return collect($panitia)->except('password');
+        });
+        // dd($dataAllPanitia);
         // array level user
         $statusUser = [
-            'calonsiswa', 'admin', 'superadmin'
+            'calonsantri', 'admin', 'superadmin'
         ];
 
         $statusPanitia = [
@@ -30,7 +38,13 @@ class ManagementUsers extends Controller
         ];
 
         //get data alluser
-        $dataAllUsers = User::getAllUsers();
+        // $dataAllUsers = User::getAllUsers();
+        $userAll = User::with('statusValidasi')->get();
+        // get data user without password
+        $dataAllUsers = $userAll->map(function ($user) {
+            return collect($user)->except(['password']);
+        });
+        // dd($dataAllUsers);
         return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
     }
     /**
@@ -91,14 +105,22 @@ class ManagementUsers extends Controller
             }
             $password1 = $request->password;
             $password2 = $request->password_confirm;
-
+            DB::beginTransaction();
             if ($password1 === $password2) {
                 $data = $request->all();
                 $data = $request->except('password_confirm');
                 $data['password'] = Hash::make($password1);
-                User::registerUser($data);
+                // insert user
+                $user = User::registerUser($data);
+                $status = [
+                    'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+                    'user_id' => $user->id_user,
+                ];
+                StatusValidasi::createStatusValidasi($status);
+                DB::commit();
                 return redirect('/users')->with('message', 'success');
             }
+            DB::rollBack();
             return redirect('/users/create')->with('message', 'failed');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
@@ -159,13 +181,20 @@ class ManagementUsers extends Controller
                 'level' => $request->updateLevel,
             ];
             $id_user = User::find($id);
+            $status = [
+                'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+            ];
 
             if (!$id_user) {
                 return redirect('/users')->with('message', 'failed');
             }
+            DB::beginTransaction();
             User::updateUser($data, $id);
+            StatusValidasi::updateStatusValidasi($status, $id);
+            DB::commit();
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
         }
     }

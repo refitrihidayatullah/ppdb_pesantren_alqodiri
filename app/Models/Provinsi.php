@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Provinsi extends Model
 {
@@ -23,4 +24,14 @@ class Provinsi extends Model
     {
         return static::all();
     }
+
+
+
+    // relasi first
+    // relasi provinsi dengan alamat_calon_santri
+    public function provinsi(): HasOne
+    {
+        return $this->hasOne(AlamatCalonSantri::class, 'provinsi_id', 'id_provinsi');
+    }
+    // relasi end
 }

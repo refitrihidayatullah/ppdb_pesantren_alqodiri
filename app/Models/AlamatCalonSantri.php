@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AlamatCalonSantri extends Model
 {
@@ -26,4 +27,14 @@ class AlamatCalonSantri extends Model
     {
         return static::create($data);
     }
+
+
+
+    // relasi first
+    // relasi alamat calon santri dan provinsi
+    public function alamatCalonSantri(): BelongsTo
+    {
+        return $this->belongsTo(Provinsi::class, 'provinsi_id', 'id_provinsi');
+    }
+    // relasi end
 }

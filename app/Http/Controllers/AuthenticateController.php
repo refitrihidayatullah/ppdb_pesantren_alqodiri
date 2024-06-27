@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\View\View;
 use App\Models\CalonSantri;
 use Illuminate\Http\Request;
+use App\Models\StatusValidasi;
 use App\Validators\ValidatorRules;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -26,6 +28,7 @@ class AuthenticateController extends Controller
                 return redirect('/register')->withErrors($validator)->withInput();
             }
             // validasi end
+            DB::beginTransaction();
 
             $password1 = $request->password;
             $password2 = $request->password_confirm;
@@ -33,13 +36,23 @@ class AuthenticateController extends Controller
             // check password
             if ($password1 === $password2) {
                 $data = $request->except('password_confirm');
-                $data['level'] = "superadmin";
+                // $data['level'] = "superadmin";
+                $data['level'] = "calonsantri";
                 $data['password'] = Hash::make($password1);
-
                 // insert user
-                User::registerUser($data);
+                $user = User::registerUser($data);
+                $status = [
+                    'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+                    'user_id' => $user->id_user,
+                ];
+                // dd([$data, $status]);
+                // die;
+                // insert status validasi`
+                StatusValidasi::createStatusValidasi($status);
+                DB::commit();
                 return redirect('/login')->with('success', 'Silahkan Login');
             } else {
+                DB::rollBack();
                 return redirect('/register')->with('failed', 'Terjadi Kesalahan');
             }
         } catch (\Exception $e) {

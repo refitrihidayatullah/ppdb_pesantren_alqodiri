@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use App\Models\StatusValidasi;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -55,6 +56,11 @@ class User extends Authenticatable
     public function CalonSantris(): HasOne
     {
         return $this->hasOne(CalonSantri::class, 'user_id', 'id_user');
+    }
+    // relasi user dengan statusValidasi --managementDataUsers
+    public function StatusValidasi()
+    {
+        return $this->hasOne(StatusValidasi::class, 'user_id', 'id_user');
     }
 
 
