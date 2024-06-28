@@ -34,7 +34,7 @@
                             <label class="col-lg-4 col-form-label" for="val-no_hp">No Hp<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input type="text" value="{{old('updatePanitiaNo_hp')?:$dataPanitia->no_hp}}" class="form-control @error('updatePanitiaNo_hp') is-invalid @enderror" id="val-updatePanitiaNo_hp" name="updatePanitiaNo_hp" placeholder="Masukkan Nomor Telp Anda..">
+                                <input type="number" value="{{old('updatePanitiaNo_hp')?:$dataPanitia->no_hp}}" class="form-control @error('updatePanitiaNo_hp') is-invalid @enderror" id="val-updatePanitiaNo_hp" name="updatePanitiaNo_hp" placeholder="Masukkan Nomor Telp Anda..">
                                 @error('updatePanitiaNo_hp')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror

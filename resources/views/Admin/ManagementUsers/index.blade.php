@@ -171,7 +171,7 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                                <a href="{{url('/users/create-panitia')}}" class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></a>
+                                                <a href="{{url('/users/create-user-putra')}}" class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa fa-plus"></i></span></a>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered zero-configuration">
                                                     <thead>
@@ -180,36 +180,34 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
-                                                            <th>Status</th>
+                                                            <th>Jenis Kelamin</th>
+                                                            <th>Status Validasi</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        
+                                                        @foreach ($dataUserPutra as $index => $userPutra)
+                                                            
                                                         <tr>
-                                                            {{-- <td>{{$loop->iteration??''}}</td>
-                                                            <td>{{$allPanitia->name??''}}</td>
-                                                            <td>{{$allPanitia->email??''}}</td>
-                                                            <td>{{$allPanitia->no_hp??''}}</td>
-                                                            <td>
-                                                                @if ($allPanitia->level === "superadmin")                                                                  
-                                                                <span class="badge badge-dark">{{$allPanitia->level??''}}</span>
-                                                                @elseif($allPanitia->level === "admin")
-                                                                <span class="badge badge-primary">{{$allPanitia->level??''}}</span>
-                                                                @else            
-                                                                <span class="badge badge-success">{{$allPanitia->level??''}}</span>
-                                                                @endif
+                                                            <td>{{$index +1??''}}</td>
+                                                            <td>{{$userPutra['name']??''}}</td>
+                                                            <td>{{$userPutra['email']??''}}</td>
+                                                            <td>{{$userPutra['no_hp']??''}}</td>
+                                                            <td>{{$userPutra['calon_santris']['jenis_kelamin_santri']??''}}</td>
+                                                            <td>       
+                                                                <span class="badge badge-success">{{$userPutra['status_validasi']['nama_status_validasi']??''}}</span>
                                                             </td>
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$allPanitia->id_user}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$userPutra['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
                                                             <div class="dropdown-menu"><a class="dropdown-item" href="
-                                                                {{url("/users/".$allPanitia->id_user."/edit-panitia")}}">Edit</a>
-                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$allPanitia->id_user}}" href="#">Delete</a>
+                                                                {{url("/users/".$userPutra['id_user']."/edit-panitia")}}">Edit</a>
+                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$userPutra['id_user']}}" href="#">Delete</a>
 
                                                             </div>
-                                                            </td> --}}
+                                                            </td>
                                                         </tr>
+                                                        @endforeach
                                            
                                                     </tbody>
                                                     <tfoot>
@@ -218,7 +216,8 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
-                                                            <th>Status</th>
+                                                            <th>Jenis Kelamin</th>
+                                                            <th>Status Validasi</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>

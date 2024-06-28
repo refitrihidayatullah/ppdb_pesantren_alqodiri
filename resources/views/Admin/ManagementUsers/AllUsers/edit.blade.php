@@ -34,7 +34,7 @@
                             <label class="col-lg-4 col-form-label" for="val-no_hp">No Hp<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input type="text" value="{{old('updateNo_hp')?:$dataUser->no_hp}}" class="form-control @error('updateNo_hp') is-invalid @enderror" id="val-updateNo_hp" name="updateNo_hp" placeholder="Masukkan Nomor Telp Anda..">
+                                <input type="number" value="{{old('updateNo_hp')?:$dataUser->no_hp}}" class="form-control @error('updateNo_hp') is-invalid @enderror" id="val-updateNo_hp" name="updateNo_hp" placeholder="Masukkan Nomor Telp Anda..">
                                 @error('updateNo_hp')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror

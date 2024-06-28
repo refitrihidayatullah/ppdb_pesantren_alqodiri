@@ -33,7 +33,7 @@
                             <label class="col-lg-4 col-form-label" for="val-no_hp">No Hp<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input type="text" value="{{old('panitiaNo_hp')}}" class="form-control @error('panitiaNo_hp') is-invalid @enderror" id="val-panitiaNo_hp" name="panitiaNo_hp" placeholder="Masukkan Nomor Telp Anda..">
+                                <input type="number" value="{{old('panitiaNo_hp')}}" class="form-control @error('panitiaNo_hp') is-invalid @enderror" id="val-panitiaNo_hp" name="panitiaNo_hp" placeholder="Masukkan Nomor Telp Anda..">
                                 @error('panitiaNo_hp')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror

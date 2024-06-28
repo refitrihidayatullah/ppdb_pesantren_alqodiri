@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 
+use function PHPSTORM_META\map;
+
 class ManagementUsers extends Controller
 {
     /**
@@ -20,10 +22,20 @@ class ManagementUsers extends Controller
 
     public function index(): View
     {
-
+        // get data user putra
+        $userPutra = User::with('statusValidasi', 'calonSantris')
+            ->where('level', 'calonsantri')
+            ->whereHas('calonSantris', function ($query) {
+                $query->where('jenis_kelamin_santri', 'laki-laki');
+            })
+            ->get();
+        $dataUserPutra = $userPutra->map(function ($putra) {
+            return collect($putra)->except('password');
+        });
+        // dd($dataUserPutra);
         // get data panitia[admin,superadmin]
         // $dataAllPanitia = User::getAllPanitia();
-        $AllPanitia = User::with('statusValidasi')->where('level', 'admin')->orWhere('level', 'superadmin')->get();
+        $AllPanitia = User::with('statusValidasi')->whereIn('level', ['admin', 'superadmin'])->orderBy('updated_at', 'desc')->get();
         $dataAllPanitia = $AllPanitia->map(function ($panitia) {
             return collect($panitia)->except('password');
         });
@@ -39,13 +51,13 @@ class ManagementUsers extends Controller
 
         //get data alluser
         // $dataAllUsers = User::getAllUsers();
-        $userAll = User::with('statusValidasi')->get();
+        $userAll = User::with('statusValidasi')->orderBy('updated_at', 'desc')->get();
         // get data user without password
         $dataAllUsers = $userAll->map(function ($user) {
             return collect($user)->except(['password']);
         });
         // dd($dataAllUsers);
-        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
+        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'dataUserPutra', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
     }
     /**
      * func menampilkan data create all users :view
@@ -53,7 +65,7 @@ class ManagementUsers extends Controller
     public function create(): View
     {
         $statusUser = [
-            'calonsiswa', 'admin', 'superadmin'
+            'calonsantri', 'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.AllUsers.create', compact('statusUser'));
     }
@@ -63,7 +75,7 @@ class ManagementUsers extends Controller
     public function createPanitia(): View
     {
         $statusUser = [
-            'calonsiswa', 'admin', 'superadmin'
+            'calonsantri', 'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.PanitiaUsers.create', compact('statusUser'));
     }
@@ -75,7 +87,7 @@ class ManagementUsers extends Controller
     {
         $dataUser = User::getUserById($id);
         $statusUser = [
-            'calonsiswa', 'admin', 'superadmin'
+            'calonsantri', 'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.AllUsers.edit', compact('statusUser', 'dataUser'));
     }
@@ -87,7 +99,7 @@ class ManagementUsers extends Controller
     {
         $dataPanitia = User::getUserById($id);
         $statusUser = [
-            'calonsiswa', 'admin', 'superadmin'
+            'calonsantri', 'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.PanitiaUsers.edit', compact('statusUser', 'dataPanitia'));
     }
@@ -139,7 +151,7 @@ class ManagementUsers extends Controller
             }
             $password11 = $request->panitiaPassword;
             $password22 = $request->panitiaPassword_confirm;
-
+            DB::beginTransaction();
             if ($password11 === $password22) {
                 $data = $request->except($password22);
                 $data =
@@ -150,9 +162,18 @@ class ManagementUsers extends Controller
                         'level' => $request->panitiaLevel,
                         'password' => Hash::make($password11),
                     ];
-                User::registerUserPanitia($data);
+                // insert data users
+                $user = User::registerUserPanitia($data);
+                $status = [
+                    'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+                    'user_id' => $user->id_user,
+                ];
+                // insert data status validasi
+                StatusValidasi::createStatusValidasi($status);
+                DB::commit();
                 return redirect('/users')->with('message', 'success');
             }
+            DB::rollBack();
             return redirect('/users/create-panitia')->with('message', 'failed');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
@@ -218,14 +239,21 @@ class ManagementUsers extends Controller
                 'no_hp' => $request->updatePanitiaNo_hp,
                 'level' => $request->updatePanitiaLevel,
             ];
+            $status = [
+                'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+            ];
             $id_user = User::find($id);
 
             if (!$id_user) {
                 return redirect('/users')->with('message', 'failed');
             }
+            DB::beginTransaction();
             User::updateUserPanitia($data, $id);
+            StatusValidasi::updateStatusValidasi($status, $id);
+            DB::commit();
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect('/users')->with('failed', 'Terjadi Kesalahan ' . $e->getMessage());
         }
     }

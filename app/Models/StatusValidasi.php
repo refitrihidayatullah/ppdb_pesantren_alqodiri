@@ -33,6 +33,12 @@ class StatusValidasi extends Model
     }
 
 
+    // update status validasi saat user mengisi form pendaftaran --form pendaftaran
+    public static function updateStatusValidasiForm(array $data = [], $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
     // relasi first
     // relasi user dan statusValidasi --managementDataUser
     public function user(): BelongsTo

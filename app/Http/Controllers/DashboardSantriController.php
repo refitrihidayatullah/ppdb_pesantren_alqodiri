@@ -17,6 +17,7 @@ use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrangTuaCalonSantri;
+use App\Models\StatusValidasi;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -95,6 +96,9 @@ class DashboardSantriController extends Controller
             'user_id' => $user_id,
             'name' => $request->informasi_ppdb
         ];
+        $user_id = Auth::user()->id_user;
+        $statusValidasi['nama_status_validasi'] = "in_progress";
+
         // dd([$calonSantri, $alamatCalonSantri, $orangtuaCalonSantri, $informasiPpdb]);
         // die;
 
@@ -108,6 +112,8 @@ class DashboardSantriController extends Controller
             OrangTuaCalonSantri::insertOrangTuaCalonSiswa($orangtuaCalonSantri);
             // insert informasi ppdb
             InformasiPpdb::insertInformasiPpdb($informasiPpdb);
+            // update statusValidasi
+            StatusValidasi::updateStatusValidasiForm($statusValidasi, $user_id);
             DB::commit();
             return redirect('/dashboard-santri')->with('success', 'Pendaftaran Berhasil Silahkan Cetak Bukti pendaftaran');
         } catch (\Exception $e) {
