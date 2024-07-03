@@ -32,6 +32,12 @@ class CalonSantri extends Model
         return static::create($data);
     }
 
+    // update calon santri
+    public static function updateCalonSantri(array $data = [], $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
 
     // relasi user dan calon santri
     public function user(): BelongsTo

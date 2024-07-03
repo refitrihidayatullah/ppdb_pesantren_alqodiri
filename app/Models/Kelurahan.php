@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kelurahan extends Model
 {
@@ -18,4 +19,12 @@ class Kelurahan extends Model
         'kecamatan_id',
         'name',
     ];
+
+    //relasi first
+    // relasi kelurahan dengan alamat_calon_santri
+    public function kelurahan(): HasOne
+    {
+        return $this->hasOne(AlamatCalonSantri::class, 'kelurahan_id', 'id_kelurahan');
+    }
+    // relasi end
 }

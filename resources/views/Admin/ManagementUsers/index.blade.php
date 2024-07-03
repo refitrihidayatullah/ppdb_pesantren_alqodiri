@@ -72,12 +72,20 @@
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
+                                                                <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
+                                                                <div class="dropdown-menu" style="overflow:hidden;"><a  class="dropdown-item" href="{{url("/users/".$allUsers['id_user']."/edit")}}">Edit</a>
+                                                                    @if ($allUsers['status_validasi']['nama_status_validasi'] === 'in_progress' )                       
+                                                                    <a class="dropdown-item" href="{{url("/form-pendaftaran/".$allUsers['id_user']."/edit")}}">Edit Form Pendaftaran</a>
+                                                                    @endif
+                                                                    @if ($allUsers['status_validasi']['nama_status_validasi'] === 'pending' )                       
+                                                                    <a class="dropdown-item" href="{{url('/form-pendaftaran')}}">Isi Form Pendaftaran</a>
+                                                                    @endif
+
+                                                                    <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers['id_user']}}" href="#">Delete</a>
+                                                                </div>
                                                             <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
-                                                            <div class="dropdown-menu"><a class="dropdown-item" href="{{url("/users/".$allUsers['id_user']."/edit")}}">Edit</a>
-                                                                <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers['id_user']}}" href="#">Delete</a>
-                                                            </div>
-                                                            </td>
+                                                            
+                                                        </td>
                                                         </tr>
                                                         @endforeach
                                                     </tbody>

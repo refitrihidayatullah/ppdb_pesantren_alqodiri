@@ -84,8 +84,15 @@ class AuthenticateController extends Controller
         $credentials = $request->only($field, 'password');
         if (Auth::attempt($credentials)) {
             // Jika sukses, redirect ke dashboard
-
-            return redirect('/dashboard')->with('success', 'Selamat Datang ' . Auth::user()->name);
+            $cek_is_login = User::where($field, $login)->select('level')->first();
+            if ($cek_is_login) {
+                if ($cek_is_login->level == "superadmin" || $cek_is_login->level == "admin") {
+                    return redirect('/dashboard')->with('success', 'Selamat Datang ' . Auth::user()->name);
+                }
+                return redirect('/dashboard-santri')->with('success', 'Selamat Datang ' . Auth::user()->name);
+            } else {
+                return redirect('/login')->with('failed', 'User not found.');
+            }
         } else {
             // Jika gagal, redirect kembali ke login dengan pesan error
             return redirect('/login')->with('failed', 'Username or Password is wrong!');

@@ -13,6 +13,9 @@
     <link href="{{asset('assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/plugins/jquery-steps/css/jquery.steps.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
+
   
    
 
@@ -69,19 +72,6 @@
                 <div class="nav-control">
                     <div class="hamburger">
                         <span class="toggle-icon"><i class="icon-menu"></i></span>
-                    </div>
-                </div>
-                <div class="header-left">
-                    <div class="input-group icons">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
-                        </div>
-                        <input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
-                        <div class="drop-down d-md-none">
-							<form action="#">
-								<input type="text" class="form-control" placeholder="Search">
-							</form>
-                        </div>
                     </div>
                 </div>
                 <div class="header-right">
@@ -243,9 +233,8 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('assets/jquery/jquery.min.js')}}"></script>
-    
+   
+
     <script src="{{asset('assets/plugins/common/common.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.min.js')}}"></script>
     <script src="{{asset('assets/js/settings.js')}}"></script>
@@ -262,89 +251,95 @@
     <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins-init/jquery-steps-init.js')}}"></script>
 
-
-    {{-- select2 untuk select wilayah indonesia --}}
-    <script>
-        $(function ()
-        {
+{{-- untuk add dan edit data wilayah form pendaftaran --}}
+    <script type="text/javascript">
+        $(function () {
             $.ajaxSetup({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
             });
-
-        $(function(){
-            // provinsi
-            $('#provinsi').on('change', function(){
-                let id_provinsi = $(this).val();
-                // console.log(id_provinsi);
-                $.ajax({
-                    type: 'POST',
-                    url: "{{route('getkabupaten')}}",
-                    data: {id_provinsi:id_provinsi},
-                    cache : false,
-
-                    success: function(msg)
-                    {
-                        $('#kabupaten').html(msg);
-                        $('#kecamatan').html('');
-                        $('#kelurahan').html('');
-              
-                    },
-                    error: function(data){
-                        console.log('error:',data);
-                    },
-                })
-            }); 
-
-
-             // kabupaten
-             $('#kabupaten').on('change', function(){
-                let id_kabupaten = $(this).val();
-                // console.log(id_kabupaten);
-                $.ajax({
-                    type: 'POST',
-                    url: "{{route('getkecamatan')}}",
-                    data: {id_kabupaten:id_kabupaten},
-                    cache : false,
-
-                    success: function(msg)
-                    {
-                        $('#kecamatan').html(msg);
-                        $('#kelurahan').html('');
-              
-                    },
-                    error: function(data){
-                        console.log('error:',data);
-                    },
-                })
+        
+            $(document).ready(function() {
+                let selectedKabupaten = "{{ old('kabupaten_id', $dataPendaftaranById['alamat_calon_santri']['kabupaten_id'] ?? '') }}";
+                let selectedKecamatan = "{{ old('kecamatan_id', $dataPendaftaranById['alamat_calon_santri']['kecamatan_id'] ?? '') }}";
+                let selectedKelurahan = "{{ old('kelurahan_id', $dataPendaftaranById['alamat_calon_santri']['kelurahan_id'] ?? '') }}";
+        
+                $('#provinsi').change(function() {
+                    var id_provinsi = $(this).val();
+                    $('#kabupaten').html('<option value="">Pilih Kabupaten</option>');
+                    $('#kecamatan').html('<option value="">Pilih Kecamatan</option>');
+                    $('#kelurahan').html('<option value="">Pilih Kelurahan</option>');
+        
+                    $.ajax({
+                        url: "{{ route('getkabupaten') }}",
+                        method: "POST",
+                        data: { id_provinsi: id_provinsi },
+                        success: function(data) {              
+                            var options = '<option value="">Pilih Kabupaten</option>';
+                            data.forEach(function(kab) {
+                                options += '<option value="' + kab.id_kabupaten + '" ' + (kab.id_kabupaten == selectedKabupaten ? 'selected' : '') + '>' + kab.name + '</option>';
+                            });
+                            $('#kabupaten').html(options).trigger('change');
+                        }
+                    });
+                });
+        
+                $('#kabupaten').change(function() {
+                    var id_kabupaten = $(this).val();
+                    $('#kecamatan').html('<option value="">Pilih Kecamatan</option>');
+                    $('#kelurahan').html('<option value="">Pilih Kelurahan</option>');
+        
+                    $.ajax({
+                        url: "{{ route('getkecamatan') }}",
+                        method: "POST",
+                        data: { id_kabupaten: id_kabupaten },
+                        success: function(data) {
+                            var options = '<option value="">Pilih Kecamatan</option>';
+                            data.forEach(function(kec) {
+                                options += '<option value="' + kec.id_kecamatan + '" ' + (kec.id_kecamatan == selectedKecamatan ? 'selected' : '') + '>' + kec.name + '</option>';
+                            });
+                            $('#kecamatan').html(options).trigger('change');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error: " + error);
+                            console.log(xhr.responseText); // Menampilkan pesan kesalahan dari server
+                        }
+                    });
+                });
+        
+                $('#kecamatan').change(function() {
+                    var id_kecamatan = $(this).val();
+                    $('#kelurahan').html('<option value="">Pilih Kelurahan</option>');
+        
+                    $.ajax({
+                        url: "{{ route('getkelurahan') }}",
+                        method: "POST",
+                        data: { id_kecamatan: id_kecamatan },
+                        success: function(data) {
+                            var options = '<option value="">Pilih Kelurahan</option>';
+                            data.forEach(function(kel) {
+                                options += '<option value="' + kel.id_kelurahan + '" ' + (kel.id_kelurahan == selectedKelurahan ? 'selected' : '') + '>' + kel.name + '</option>';
+                            });
+                            $('#kelurahan').html(options);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error: " + error);
+                            console.log(xhr.responseText); // Menampilkan pesan kesalahan dari server
+                        }
+                    });
+                });
+        
+                // Trigger change event on page load if data is already selected
+                if ($('#provinsi').val()) {
+                    $('#provinsi').trigger('change');
+                }
             });
-
-                   // kecamatan
-                   $('#kecamatan').on('change', function(){
-                let id_kecamatan = $(this).val();
-                // console.log(id_kecamatan);
-                $.ajax({
-                    type: 'POST',
-                    url: "{{route('getkelurahan')}}",
-                    data: {id_kecamatan:id_kecamatan},
-                    cache : false,
-
-                    success: function(msg)
-                    {
-                        $('#kelurahan').html(msg);
-              
-                    },
-                    error: function(data){
-                        console.log('error:',data);
-                    },
-                })
-            }); 
-
-            
         });
+        </script>
+        
+    
 
 
-        });
-    </script>
+
 
     
     

@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users', [ManagementUsers::class, 'index']);
     Route::get('/users/create', [ManagementUsers::class, 'create']);
     Route::get('/users/create-panitia', [ManagementUsers::class, 'createPanitia']);
+    Route::get('/users/create-user-putra', [ManagementUsers::class, 'createPanitia']);
     Route::get('/users/{id}/edit', [ManagementUsers::class, 'edit']);
     Route::get('/users/{id}/edit-panitia', [ManagementUsers::class, 'editPanitia']);
     Route::post('/users/store', [ManagementUsers::class, 'store']);
@@ -52,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard-santri', [DashboardSantriController::class, 'index']);
     Route::get('/form-pendaftaran', [DashboardSantriController::class, 'formPendaftaran']);
     Route::post('/form-pendaftaran/store', [DashboardSantriController::class, 'storePendaftaran']);
+    Route::get('/form-pendaftaran/{id}/edit', [DashboardSantriController::class, 'EditFormPendaftaran']);
+    Route::post('/form-pendaftaran/update/{id}', [DashboardSantriController::class, 'updatePendaftaran']);
+    Route::get('/form-info-pendaftaran', [DashboardSantriController::class, 'formInfoPendaftaran']);
     Route::get('/provinsi', [DashboardSantriController::class, 'provinsi']);
     Route::post('/provinsi/store', [DashboardSantriController::class, 'storeProvinsi']);
 

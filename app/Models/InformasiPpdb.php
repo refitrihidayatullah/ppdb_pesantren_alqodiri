@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InformasiPpdb extends Model
 {
@@ -22,4 +23,17 @@ class InformasiPpdb extends Model
     {
         return static::create($data);
     }
+    // update informasi ppdb
+    public static function updateInformasiPpdb(array $data = [], $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
+    // relasi first
+    // relasi user dan informasi ppdb
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
+    }
+    // relasi end
 }

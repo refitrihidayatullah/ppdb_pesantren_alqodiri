@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Arabic;
 
 class OrangTuaCalonSantri extends Model
@@ -26,4 +27,18 @@ class OrangTuaCalonSantri extends Model
     {
         return static::create($data);
     }
+    // update data orangtua calon santri
+    public static function updateOrangTuaCalonSiswa(array $data = [], $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
+    // relasi first
+    // relasi user dan statusValidasi --managementDataUser
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
+    }
+
+    // relasi end
 }

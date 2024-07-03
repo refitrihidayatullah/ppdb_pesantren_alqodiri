@@ -130,7 +130,11 @@ class ManagementUsers extends Controller
                 ];
                 StatusValidasi::createStatusValidasi($status);
                 DB::commit();
-                return redirect('/users')->with('message', 'success');
+                if ($request->level == "superadmin" || $request->level == "admin") {
+                    return redirect('/users')->with('message', 'success');
+                } else {
+                    return redirect('/form-pendaftaran')->with('success', 'silahkan melakukan pengisian form pendaftaran');
+                }
             }
             DB::rollBack();
             return redirect('/users/create')->with('message', 'failed');

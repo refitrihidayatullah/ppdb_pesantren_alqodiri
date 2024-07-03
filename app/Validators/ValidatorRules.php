@@ -199,4 +199,49 @@ class ValidatorRules
         );
     }
     // validator formulir pendaftaran santri --client end
+
+    // validator update formulir pendaftaran santri --client first
+    public static function updateFormulirRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'update_nama_lengkap_santri' => 'required',
+                'update_jenis_kelamin_santri' => 'required',
+                'update_tanggal_masuk_santri' => 'required',
+                'update_tempat_lahir_santri' => 'required',
+                'update_tanggal_lahir_santri' => 'required',
+                'update_provinsi' => 'required',
+                'update_kabupaten' => 'required',
+                'update_kecamatan' => 'required',
+                'update_kelurahan' => 'required',
+                'update_jenjang_pendidikan' => 'required',
+                'update_nama_ayah' => 'required',
+                'update_pekerjaan_ayah' => 'required',
+                'update_nama_ibu' => 'required',
+                'update_pekerjaan_ibu' => 'required',
+                'update_no_telp_ortu' => 'required',
+                'update_informasi_ppdb' => 'required',
+            ],
+            [
+                'update_nama_lengkap_santri.required' => 'nama santri harus diisi',
+                'update_jenis_kelamin_santri.required' => 'jenis kelamin harus diisi',
+                'update_tanggal_masuk_santri.required' => 'tanggal masuk santri harus diisi',
+                'update_tempat_lahir_santri.required' => 'tempat lahir santri harus diisi',
+                'update_tanggal_lahir_santri.required' => 'tanggal lahir santri harus diisi',
+                'update_provinsi.required' => 'provinsi harus diisi',
+                'update_kabupaten.required' => 'kabupaten harus diisi',
+                'update_kecamatan.required' => 'kecamatan harus diisi',
+                'update_kelurahan.required' => 'kelurahan harus diisi',
+                'update_jenjang_pendidikan.required' => 'jenjang pendidikan harus diisi',
+                'update_nama_ayah.required' => 'nama ayah harus diisi',
+                'update_pekerjaan_ayah.required' => 'pekerjaan ayah harus diisi',
+                'update_nama_ibu.required' => 'nama ibu harus diisi',
+                'update_pekerjaan_ibu.required' => 'pekerjaan ibu harus diisi',
+                'update_no_telp_ortu.required' => 'no telp orang tua harus diisi',
+                'update_informasi_ppdb.required' => 'informasi ppdb harus diisi',
+            ]
+        );
+    }
+    // validator update formulir pendaftaran santri --client end
 }

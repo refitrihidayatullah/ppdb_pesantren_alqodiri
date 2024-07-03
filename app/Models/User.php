@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -50,21 +51,7 @@ class User extends Authenticatable
     ];
 
 
-    // relasi first
 
-    // relasi user dengan calonsantri
-    public function CalonSantris(): HasOne
-    {
-        return $this->hasOne(CalonSantri::class, 'user_id', 'id_user');
-    }
-    // relasi user dengan statusValidasi --managementDataUsers
-    public function StatusValidasi()
-    {
-        return $this->hasOne(StatusValidasi::class, 'user_id', 'id_user');
-    }
-
-
-    // relasi end
 
     // registrasi first
 
@@ -123,4 +110,45 @@ class User extends Authenticatable
         return static::where('id_user', $id)->delete();
     }
     // management akun end
+
+
+    // formulir pendaftaran first
+    public static function userWithoutIdInCalonSantri()
+    {
+        return static::where('level', '!=', 'superadmin')
+            ->where('level', '!=', 'admin')
+            ->whereDoesntHave('CalonSantris')
+            ->get();
+    }
+
+
+    // relasi first
+
+    // relasi user dengan calonsantri
+    public function CalonSantris(): HasOne
+    {
+        return $this->hasOne(CalonSantri::class, 'user_id', 'id_user');
+    }
+    // relasi user dengan statusValidasi --managementDataUsers
+    public function StatusValidasi(): HasOne
+    {
+        return $this->hasOne(StatusValidasi::class, 'user_id', 'id_user');
+    }
+    // relasi user dengan alamatCalonSantri
+    public function AlamatCalonSantri(): HasOne
+    {
+        return $this->hasOne(AlamatCalonSantri::class, 'user_id', 'id_user');
+    }
+
+    // relasi user dengan informasi ppdb
+    public function InformasiPpdb(): HasOne
+    {
+        return $this->hasOne(InformasiPpdb::class, 'user_id', 'id_user');
+    }
+    // relasi user dengan orangtuacalonsantri
+    public function OrangTuaCalonSantri(): HasOne
+    {
+        return $this->hasOne(OrangTuaCalonSantri::class, 'user_id', 'id_user');
+    }
+    // relasi end
 }
