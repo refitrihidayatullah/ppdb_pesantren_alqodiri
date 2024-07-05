@@ -66,6 +66,12 @@ class User extends Authenticatable
         return static::create($data);
     }
 
+    // function registrasi pembuatan akun putra
+    public static function registerUserPutra(array $data = [])
+    {
+        return static::create($data);
+    }
+
     // registrasi end
 
     // management akun first
@@ -83,7 +89,6 @@ class User extends Authenticatable
     // function mengambil semua data panitia[admin,superadmin]
     public static function getAllPanitia()
     {
-
         return static::where('level', 'admin')->orWhere('level', 'superadmin')->select('id_user', 'name', 'email', 'no_hp', 'level', 'created_at', 'updated_at')->orderBy('created_at', 'desc')->get();
     }
 
@@ -95,6 +100,12 @@ class User extends Authenticatable
 
     // function update data users panitia
     public static function updateUserPanitia(array $data = [], $id)
+    {
+        return static::where('id_user', $id)->update($data);
+    }
+
+    // function update data users putra
+    public static function updateUserPutra(array $data = [], $id)
     {
         return static::where('id_user', $id)->update($data);
     }

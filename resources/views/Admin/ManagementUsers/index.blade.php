@@ -209,7 +209,7 @@
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
                                                             <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$userPutra['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
                                                             <div class="dropdown-menu"><a class="dropdown-item" href="
-                                                                {{url("/users/".$userPutra['id_user']."/edit-panitia")}}">Edit</a>
+                                                                {{url("/users/".$userPutra['id_user']."/edit-putra")}}">Edit</a>
                                                                 <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPanitiaModal{{$userPutra['id_user']}}" href="#">Delete</a>
 
                                                             </div>

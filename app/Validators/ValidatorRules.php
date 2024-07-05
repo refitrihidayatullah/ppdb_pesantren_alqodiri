@@ -94,6 +94,36 @@ class ValidatorRules
     }
     // validator register/tambah user panitia --admin end
 
+    // validator register/tambah user putra --admin first
+    public static function tambahUserPutraRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'putraName' => 'required',
+                'putraEmail' => 'required|unique:users,email',
+                'putraNo_hp' => 'required|numeric|regex:/^[0-9]{10,15}$/|unique:Users,no_hp',
+                'putraLevel' => 'required',
+                'putraPassword' => 'required',
+                'putraPassword_confirm' => 'required|same:putraPassword',
+            ],
+            [
+                'putraName.required' => 'nama lengkap harus diisi',
+                'putraEmail.required' => 'email harus diisi',
+                'putraEmail.unique' => 'email sudah terdaftar',
+                'putraNo_hp.required' => 'no hp harus diisi',
+                'putraNo_hp.unique' => 'no hp sudah terdaftar',
+                'putraNo_hp.numeric' => 'no hp harus numeric',
+                'putraNo_hp.regex' => 'no hp minimal 10 angka',
+                'putraLevel.required' => ' status harus diisi',
+                'putraPassword.required' => 'password harus diisi',
+                'putraPassword_confirm.required' => 'password harus diisi',
+                'putraPassword_confirm.same' => 'password tidak sama',
+            ]
+        );
+    }
+    // validator register/tambah user putra --admin end
+
 
     // validator edit/update user --admin first
     public static function updateUserRules(array $data = [])
@@ -108,7 +138,7 @@ class ValidatorRules
             ],
             [
                 'updateName.required' => 'nama lengkap harus diisis',
-                'updatEmail.required' => 'email harus diisi',
+                'updateEmail.required' => 'email harus diisi',
                 'updateNo_hp.required' => 'no hp harus diisi',
                 'updateLevel.required' => ' status harus diisi',
             ]
@@ -128,10 +158,31 @@ class ValidatorRules
                 'updatePanitiaLevel' => 'required',
             ],
             [
-                'updatePanitiaName.required' => 'nama lengkap harus diisis',
+                'updatePanitiaName.required' => 'nama lengkap harus diisi',
                 'updatePanitiaEmail.required' => 'email harus diisi',
                 'updatePanitiaNo_hp.required' => 'no hp harus diisi',
                 'updatePanitiaLevel.required' => ' status harus diisi',
+            ]
+        );
+    }
+    // validator edit/update user panitia --admin end
+
+    // validator edit/update user panitia --admin first
+    public static function updateUserPutraRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'updatePutraName' => 'required',
+                'updatePutraEmail' => 'required',
+                'updatePutraNo_hp' => 'required',
+                'updatePutraLevel' => 'required',
+            ],
+            [
+                'updatePutraName.required' => 'nama lengkap harus diisi',
+                'updatePutraEmail.required' => 'email harus diisi',
+                'updatePutraNo_hp.required' => 'no hp harus diisi',
+                'updatePutraLevel.required' => ' status harus diisi',
             ]
         );
     }

@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\View\View;
+use App\Models\CalonSantri;
 use Illuminate\Http\Request;
+use App\Models\InformasiPpdb;
 use App\Models\StatusValidasi;
+use function PHPSTORM_META\map;
+use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
 use Illuminate\Support\Facades\DB;
+use App\Models\OrangTuaCalonSantri;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
-
-use function PHPSTORM_META\map;
 
 class ManagementUsers extends Controller
 {
@@ -75,20 +79,35 @@ class ManagementUsers extends Controller
     public function createPanitia(): View
     {
         $statusUser = [
-            'calonsantri', 'admin', 'superadmin'
+            'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.PanitiaUsers.create', compact('statusUser'));
     }
-
+    /**
+     * func menampilkan data create users putra :view
+     */
+    public function createUserPutra(): View
+    {
+        $statusUser = [
+            'calonsantri'
+        ];
+        return view('Admin.ManagementUsers.PutraUsers.create', compact('statusUser'));
+    }
     /**
      * func menampilkan data edit all users :view
      */
     public function edit($id): View
     {
-        $dataUser = User::getUserById($id);
-        $statusUser = [
-            'calonsantri', 'admin', 'superadmin'
-        ];
+        $dataUser =  User::getUserById($id);
+        if ($dataUser->level == "superadmin" || $dataUser->level == "admin") {
+            $statusUser = [
+                'admin', 'superadmin'
+            ];
+        } else {
+            $statusUser = [
+                'calonsantri'
+            ];
+        }
         return view('Admin.ManagementUsers.AllUsers.edit', compact('statusUser', 'dataUser'));
     }
 
@@ -99,9 +118,21 @@ class ManagementUsers extends Controller
     {
         $dataPanitia = User::getUserById($id);
         $statusUser = [
-            'calonsantri', 'admin', 'superadmin'
+            'admin', 'superadmin'
         ];
         return view('Admin.ManagementUsers.PanitiaUsers.edit', compact('statusUser', 'dataPanitia'));
+    }
+
+    /**
+     * func menampilkan data edit users panitia :view
+     */
+    public function editPutra($id): View
+    {
+        $dataPutra = User::getUserById($id);
+        $statusUser = [
+            'calonsantri'
+        ];
+        return view('Admin.ManagementUsers.PutraUsers.edit', compact('statusUser', 'dataPutra'));
     }
 
     /**
@@ -184,6 +215,48 @@ class ManagementUsers extends Controller
         }
     }
 
+    /**
+     * func tambah data user panitia :redirectResponse
+     */
+
+    public function storePutra(Request $request): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::tambahUserPutraRules($request->all());
+            if ($validation->fails()) {
+                return redirect('/users/create-user-putra')->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+            $password11 = $request->putraPassword;
+            $password22 = $request->putraPassword_confirm;
+            DB::beginTransaction();
+            if ($password11 === $password22) {
+                $data = $request->except($password22);
+                $data =
+                    [
+                        'name' => $request->putraName,
+                        'email' => $request->putraEmail,
+                        'no_hp' => $request->putraNo_hp,
+                        'level' => $request->putraLevel,
+                        'password' => Hash::make($password11),
+                    ];
+                // insert data users
+                $user = User::registerUserputra($data);
+                $status = [
+                    'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+                    'user_id' => $user->id_user,
+                ];
+                // insert data status validasi
+                StatusValidasi::createStatusValidasi($status);
+                DB::commit();
+                return redirect('/form-pendaftaran')->with('success', 'silahkan melakukan pengisian form pendaftaran');
+            }
+            DB::rollBack();
+            return redirect('/users')->with('message', 'failed');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+        }
+    }
+
 
 
 
@@ -205,22 +278,10 @@ class ManagementUsers extends Controller
                 'no_hp' => $request->updateNo_hp,
                 'level' => $request->updateLevel,
             ];
-            $id_user = User::find($id);
-            $status = [
-                'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
-            ];
-
-            if (!$id_user) {
-                return redirect('/users')->with('message', 'failed');
-            }
-            DB::beginTransaction();
             User::updateUser($data, $id);
-            StatusValidasi::updateStatusValidasi($status, $id);
-            DB::commit();
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan' . $e->getMessage());
         }
     }
 
@@ -243,22 +304,35 @@ class ManagementUsers extends Controller
                 'no_hp' => $request->updatePanitiaNo_hp,
                 'level' => $request->updatePanitiaLevel,
             ];
-            $status = [
-                'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
-            ];
-            $id_user = User::find($id);
-
-            if (!$id_user) {
-                return redirect('/users')->with('message', 'failed');
-            }
-            DB::beginTransaction();
             User::updateUserPanitia($data, $id);
-            StatusValidasi::updateStatusValidasi($status, $id);
-            DB::commit();
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             return redirect('/users')->with('failed', 'Terjadi Kesalahan ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * func update data user putra :redirectResponse
+     */
+
+    public function updatePutra(Request $request,  $id): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::updateUserPutraRules($request->all());
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+
+            $data = [
+                'name' => $request->updatePutraName,
+                'email' => $request->updatePutraEmail,
+                'no_hp' => $request->updatePutraNo_hp,
+                'level' => $request->updatePutraLevel,
+            ];
+            User::updateUserPutra($data, $id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
         }
     }
 
