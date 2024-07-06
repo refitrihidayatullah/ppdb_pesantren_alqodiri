@@ -26,6 +26,16 @@ class ManagementUsers extends Controller
 
     public function index(): View
     {
+        // get data user putri
+        $userPutri = User::with('statusValidasi', 'calonSantris')
+            ->where('level', 'calonsantri')
+            ->whereHas('calonSantris', function ($query) {
+                $query->where('jenis_kelamin_santri', 'perempuan');
+            })
+            ->get();
+        $dataUserPutri = $userPutri->map(function ($putra) {
+            return collect($putra)->except('password');
+        });
         // get data user putra
         $userPutra = User::with('statusValidasi', 'calonSantris')
             ->where('level', 'calonsantri')
@@ -61,7 +71,7 @@ class ManagementUsers extends Controller
             return collect($user)->except(['password']);
         });
         // dd($dataAllUsers);
-        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'dataUserPutra', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
+        return view('Admin.ManagementUsers.index', compact('dataAllUsers', 'dataUserPutra', 'dataUserPutri', 'statusUser', 'dataAllPanitia', 'statusPanitia'));
     }
     /**
      * func menampilkan data create all users :view
@@ -92,6 +102,16 @@ class ManagementUsers extends Controller
             'calonsantri'
         ];
         return view('Admin.ManagementUsers.PutraUsers.create', compact('statusUser'));
+    }
+    /**
+     * func menampilkan data create users putri :view
+     */
+    public function createUserPutri(): View
+    {
+        $statusUser = [
+            'calonsantri'
+        ];
+        return view('Admin.ManagementUsers.PutriUsers.create', compact('statusUser'));
     }
     /**
      * func menampilkan data edit all users :view
@@ -136,6 +156,19 @@ class ManagementUsers extends Controller
     }
 
     /**
+     * func menampilkan data edit users putri :view
+     */
+    public function editPutri($id): View
+    {
+        $dataPutri = User::getUserById($id);
+        $statusUser = [
+            'calonsantri'
+        ];
+        return view('Admin.ManagementUsers.PutriUsers.edit', compact('statusUser', 'dataPutri'));
+    }
+
+
+    /**
      * func tambah data user :redirectResponse
      */
 
@@ -170,7 +203,7 @@ class ManagementUsers extends Controller
             DB::rollBack();
             return redirect('/users/create')->with('message', 'failed');
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi kesalahan');
         }
     }
     /**
@@ -211,12 +244,12 @@ class ManagementUsers extends Controller
             DB::rollBack();
             return redirect('/users/create-panitia')->with('message', 'failed');
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi kesalahan');
         }
     }
 
     /**
-     * func tambah data user panitia :redirectResponse
+     * func tambah data user putra :redirectResponse
      */
 
     public function storePutra(Request $request): RedirectResponse
@@ -253,7 +286,49 @@ class ManagementUsers extends Controller
             DB::rollBack();
             return redirect('/users')->with('message', 'failed');
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Terjadi kesalahan' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi kesalahan');
+        }
+    }
+
+    /**
+     * func tambah data user putri :redirectResponse
+     */
+
+    public function storePutri(Request $request): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::tambahUserPutriRules($request->all());
+            if ($validation->fails()) {
+                return redirect('/users/create-user-putri')->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+            $password11 = $request->putriPassword;
+            $password22 = $request->putriPassword_confirm;
+            DB::beginTransaction();
+            if ($password11 === $password22) {
+                $data = $request->except($password22);
+                $data =
+                    [
+                        'name' => $request->putriName,
+                        'email' => $request->putriEmail,
+                        'no_hp' => $request->putriNo_hp,
+                        'level' => $request->putriLevel,
+                        'password' => Hash::make($password11),
+                    ];
+                // insert data users
+                $user = User::registerUserputri($data);
+                $status = [
+                    'nama_status_validasi' => ($data['level'] == "superadmin" || $data['level'] == "admin") ? "accessDenied" : "pending",
+                    'user_id' => $user->id_user,
+                ];
+                // insert data status validasi
+                StatusValidasi::createStatusValidasi($status);
+                DB::commit();
+                return redirect('/form-pendaftaran')->with('success', 'silahkan melakukan pengisian form pendaftaran');
+            }
+            DB::rollBack();
+            return redirect('/users')->with('message', 'failed');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi kesalahan');
         }
     }
 
@@ -335,6 +410,30 @@ class ManagementUsers extends Controller
             return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
         }
     }
+    /**
+     * func update data user putri :redirectResponse
+     */
+
+    public function updatePutri(Request $request,  $id): RedirectResponse
+    {
+        try {
+            $validation = ValidatorRules::updateUserPutriRules($request->all());
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation)->with('message', 'failed')->withInput();
+            }
+
+            $data = [
+                'name' => $request->updatePutriName,
+                'email' => $request->updatePutriEmail,
+                'no_hp' => $request->updatePutriNo_hp,
+                'level' => $request->updatePutriLevel,
+            ];
+            User::updateUserPutri($data, $id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan ');
+        }
+    }
 
     /**
      * func delete data user :redirectResponse
@@ -357,7 +456,31 @@ class ManagementUsers extends Controller
             User::deleteUserPanitia($id);
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Terjadi Kesalahan' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+    /**
+     * func delete data user putra :redirectResponse
+     */
+    public function destroyPutra($id): RedirectResponse
+    {
+        try {
+            User::deleteUserPutra($id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+    /**
+     * func delete data user putri :redirectResponse
+     */
+    public function destroyPutri($id): RedirectResponse
+    {
+        try {
+            User::deleteUserPutri($id);
+            return redirect('/users')->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
     }
 
@@ -390,6 +513,43 @@ class ManagementUsers extends Controller
             if ($users) {
                 $data['password'] = Hash::make($request->passwordPanitia_new);
                 User::updateUserPanitia($data, $id);
+                return redirect('/users')->with('message', 'success');
+            } else {
+                return redirect('/users')->with('failed', 'failed');
+            }
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+
+    /**
+     * func change password data user Putra :redirectResponse
+     */
+    public function changepasswordPutra(Request $request, $id): RedirectResponse
+    {
+        try {
+            $users = User::find($id);
+            if ($users) {
+                $data['password'] = Hash::make($request->passwordPutra_new);
+                User::updateUserPutra($data, $id);
+                return redirect('/users')->with('message', 'success');
+            } else {
+                return redirect('/users')->with('failed', 'failed');
+            }
+        } catch (\Exception $e) {
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
+        }
+    }
+    /**
+     * func change password data user Putri :redirectResponse
+     */
+    public function changepasswordPutri(Request $request, $id): RedirectResponse
+    {
+        try {
+            $users = User::find($id);
+            if ($users) {
+                $data['password'] = Hash::make($request->passwordPutri_new);
+                User::updateUserPutri($data, $id);
                 return redirect('/users')->with('message', 'success');
             } else {
                 return redirect('/users')->with('failed', 'failed');

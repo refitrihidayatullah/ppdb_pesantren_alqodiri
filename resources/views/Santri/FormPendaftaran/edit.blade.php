@@ -89,7 +89,7 @@
                                 <select class="form-control" id="provinsi" name="update_provinsi" >
                                  <option value="">Pilih Provinsi...</option>
                                  @foreach ($provinsis as $provinsi)
-                                 <option value="{{$dataPendaftaranById['alamat_calon_santri']['provinsi_id'] == $provinsi->id_provinsi?$dataPendaftaranById['alamat_calon_santri']['provinsi_id']:$provinsi->id_provinsi}}" {{$dataPendaftaranById['alamat_calon_santri']['provinsi_id'] == $provinsi->id_provinsi?'selected':''}}>{{$provinsi->name}}-{{$provinsi->id_provinsi}}</option>
+                                 <option value="{{$dataPendaftaranById['alamat_calon_santri']['provinsi_id'] == $provinsi->id_provinsi?$dataPendaftaranById['alamat_calon_santri']['provinsi_id']:$provinsi->id_provinsi}}" {{$dataPendaftaranById['alamat_calon_santri']['provinsi_id'] == $provinsi->id_provinsi?'selected':''}}>{{$provinsi->name}}</option>
                                  @endforeach
                                 </select>
                                 @error('update_kabupaten')

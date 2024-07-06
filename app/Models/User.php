@@ -71,7 +71,11 @@ class User extends Authenticatable
     {
         return static::create($data);
     }
-
+    // function registrasi pembuatan akun putri
+    public static function registerUserPutri(array $data = [])
+    {
+        return static::create($data);
+    }
     // registrasi end
 
     // management akun first
@@ -104,8 +108,14 @@ class User extends Authenticatable
         return static::where('id_user', $id)->update($data);
     }
 
+
     // function update data users putra
     public static function updateUserPutra(array $data = [], $id)
+    {
+        return static::where('id_user', $id)->update($data);
+    }
+    // function update data users putra
+    public static function updateUserPutri(array $data = [], $id)
     {
         return static::where('id_user', $id)->update($data);
     }
@@ -117,6 +127,16 @@ class User extends Authenticatable
     }
     // function delete data users panitia
     public static function deleteUserPanitia($id)
+    {
+        return static::where('id_user', $id)->delete();
+    }
+    // function delete data users putra
+    public static function deleteUserPutra($id)
+    {
+        return static::where('id_user', $id)->delete();
+    }
+    // function delete data users putri
+    public static function deleteUserPutri($id)
     {
         return static::where('id_user', $id)->delete();
     }

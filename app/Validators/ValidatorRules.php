@@ -125,6 +125,38 @@ class ValidatorRules
     // validator register/tambah user putra --admin end
 
 
+    // validator register/tambah user putri --admin first
+    public static function tambahUserPutriRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'putriName' => 'required',
+                'putriEmail' => 'required|unique:users,email',
+                'putriNo_hp' => 'required|numeric|regex:/^[0-9]{10,15}$/|unique:Users,no_hp',
+                'putriLevel' => 'required',
+                'putriPassword' => 'required',
+                'putriPassword_confirm' => 'required|same:putriPassword',
+            ],
+            [
+                'putriName.required' => 'nama lengkap harus diisi',
+                'putriEmail.required' => 'email harus diisi',
+                'putriEmail.unique' => 'email sudah terdaftar',
+                'putriNo_hp.required' => 'no hp harus diisi',
+                'putriNo_hp.unique' => 'no hp sudah terdaftar',
+                'putriNo_hp.numeric' => 'no hp harus numeric',
+                'putriNo_hp.regex' => 'no hp minimal 10 angka',
+                'putriLevel.required' => ' status harus diisi',
+                'putriPassword.required' => 'password harus diisi',
+                'putriPassword_confirm.required' => 'password harus diisi',
+                'putriPassword_confirm.same' => 'password tidak sama',
+            ]
+        );
+    }
+    // validator register/tambah user putra --admin end
+
+
+
     // validator edit/update user --admin first
     public static function updateUserRules(array $data = [])
     {
@@ -167,7 +199,7 @@ class ValidatorRules
     }
     // validator edit/update user panitia --admin end
 
-    // validator edit/update user panitia --admin first
+    // validator edit/update user putra --admin first
     public static function updateUserPutraRules(array $data = [])
     {
         return Validator::make(
@@ -186,7 +218,27 @@ class ValidatorRules
             ]
         );
     }
-    // validator edit/update user panitia --admin end
+    // validator edit/update user putra --admin end
+    // validator edit/update user putri --admin first
+    public static function updateUserPutriRules(array $data = [])
+    {
+        return Validator::make(
+            $data,
+            [
+                'updatePutriName' => 'required',
+                'updatePutriEmail' => 'required',
+                'updatePutriNo_hp' => 'required',
+                'updatePutriLevel' => 'required',
+            ],
+            [
+                'updatePutriName.required' => 'nama lengkap harus diisi',
+                'updatePutriEmail.required' => 'email harus diisi',
+                'updatePutriNo_hp.required' => 'no hp harus diisi',
+                'updatePutriLevel.required' => ' status harus diisi',
+            ]
+        );
+    }
+    // validator edit/update user putra --admin end
 
     // validator login --client first
     public static function loginRules(array $data = [])

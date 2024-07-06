@@ -35,19 +35,27 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/create', [ManagementUsers::class, 'create']);
     Route::get('/users/create-panitia', [ManagementUsers::class, 'createPanitia']);
     Route::get('/users/create-user-putra', [ManagementUsers::class, 'createUserPutra']);
+    Route::get('/users/create-user-putri', [ManagementUsers::class, 'createUserPutri']);
     Route::get('/users/{id}/edit', [ManagementUsers::class, 'edit']);
     Route::get('/users/{id}/edit-panitia', [ManagementUsers::class, 'editPanitia']);
     Route::get('/users/{id}/edit-putra', [ManagementUsers::class, 'editPutra']);
+    Route::get('/users/{id}/edit-putri', [ManagementUsers::class, 'editPutri']);
     Route::post('/users/store', [ManagementUsers::class, 'store']);
     Route::post('/users/store-putra', [ManagementUsers::class, 'storePutra']);
+    Route::post('/users/store-putri', [ManagementUsers::class, 'storePutri']);
     Route::post('/users/store-panitia', [ManagementUsers::class, 'storePanitia']);
     Route::put('/users/changepassword/{id}', [ManagementUsers::class, 'changepassword']);
     Route::put('/users/changepassword-panitia/{id}', [ManagementUsers::class, 'changepasswordPanitia']);
+    Route::put('/users/changepassword-putra/{id}', [ManagementUsers::class, 'changepasswordPutra']);
+    Route::put('/users/changepassword-putri/{id}', [ManagementUsers::class, 'changepasswordPutri']);
     Route::put('/users/update/{id}', [ManagementUsers::class, 'update']);
     Route::put('/users/update-panitia/{id}', [ManagementUsers::class, 'updatePanitia']);
     Route::put('/users/update-putra/{id}', [ManagementUsers::class, 'updatePutra']);
+    Route::put('/users/update-putri/{id}', [ManagementUsers::class, 'updatePutri']);
     Route::delete('/users/{id}', [ManagementUsers::class, 'destroy']);
     Route::delete('/users/panitia/{id}', [ManagementUsers::class, 'destroyPanitia']);
+    Route::delete('/users/putra/{id}', [ManagementUsers::class, 'destroyPutra']);
+    Route::delete('/users/putri/{id}', [ManagementUsers::class, 'destroyPutri']);
 });
 
 

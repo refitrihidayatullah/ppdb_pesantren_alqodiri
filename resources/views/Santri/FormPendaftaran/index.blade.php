@@ -111,7 +111,7 @@
                                 <select class="form-control" id="provinsi" name="provinsi">
                                  <option value="">Pilih Provinsi...</option>
                                  @foreach ($provinsis as $provinsi)
-                                     <option value="{{$provinsi->id_provinsi}}">{{$provinsi->name}}-{{$provinsi->id_provinsi}}</option>
+                                     <option value="{{$provinsi->id_provinsi}}">{{$provinsi->name}}</option>
                                  @endforeach
   
                                 </select>
