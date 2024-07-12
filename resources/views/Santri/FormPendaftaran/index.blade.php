@@ -23,7 +23,7 @@
                                  <option value="">Pilih Calon Santri...</option>
                                @if (count($usersWithoutCalonSantri) > 0)
                                @foreach ($usersWithoutCalonSantri as $notCalonSantri)
-                               <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}-{{$notCalonSantri->id_user}}</option>
+                               <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}</option>
                                @endforeach                     
                                @else
                                <option value="">Belum Ada Calon Santri yang terdaftar</option>                                      

@@ -347,4 +347,12 @@ class ValidatorRules
         );
     }
     // validator update formulir pendaftaran santri --client end
+    // validator update validasi pendaftaran --client end
+    public static function updateValidasi(array $data = [])
+    {
+        return Validator::make($data, [
+            'updateStatusValidasi' => 'required|in:in_progress,completed'
+        ]);
+    }
+    // validator update validasi pendaftaran --client end
 }

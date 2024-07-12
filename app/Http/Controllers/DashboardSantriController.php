@@ -19,6 +19,7 @@ use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrangTuaCalonSantri;
+use Dotenv\Validator;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,7 +30,10 @@ class DashboardSantriController extends Controller
      */
     public function index(): View
     {
-        return view('Santri.Dashboard.index');
+        $dataSantriById = User::with('Statusvalidasi', 'CalonSantris')->where('id_user', Auth::user()->id_user)->first();
+        $dataSantri = collect($dataSantriById)->except('password');
+        // dd($dataSantri);
+        return view('Santri.Dashboard.index', compact('dataSantri'));
     }
 
     /**
@@ -119,7 +123,35 @@ class DashboardSantriController extends Controller
         $provinsis = Provinsi::getDataProvinsi();
         return view('Santri.FormPendaftaran.edit ', compact('dataPendaftaranById', 'provinsis', 'informasi_ppdb', 'jenis_kelamin', 'pekerjaan_ortu', 'jenjang_pendidikan'));
     }
-
+    /**
+     * func menampilkan data validasi pendaftaran
+     */
+    public function validasiPendaftaran(): View
+    {
+        $dataAllPendaftaran = User::with('statusValidasi', 'calonSantris')->where('level', 'calonsantri')->get();
+        $allPendaftaran = $dataAllPendaftaran->map(function ($value) {
+            return collect($value)->except('password');
+        });
+        // dd($allPendaftaran);
+        return view('Admin.ValidasiPendaftaran.index', compact('allPendaftaran'));
+    }
+    /**
+     * func menampilkan data update validasi pendaftaran
+     */
+    public function updateValidasiPendaftaran(Request $request, $id)
+    {
+        try {
+            $validation = ValidatorRules::updateValidasi($request->all());
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation)->withInput();
+            }
+            $data = ["nama_status_validasi" => $request->updateStatusValidasi];
+            StatusValidasi::updateStatusValidasi($data, $id);
+            return redirect()->back()->with('message', 'success');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', 'failed' . $e->getMessage());
+        }
+    }
     /**
      * func untuk update pendaftaran 
      */
@@ -270,6 +302,7 @@ class DashboardSantriController extends Controller
             return redirect('/form-pendaftaran')->with('failed', 'Terjadi Kesalahan' . $e->getMessage())->withInput();
         }
     }
+
 
     /**
      * func menampilkan data import provinsi

@@ -69,6 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/form-info-pendaftaran', [DashboardSantriController::class, 'formInfoPendaftaran']);
     Route::get('/provinsi', [DashboardSantriController::class, 'provinsi']);
     Route::post('/provinsi/store', [DashboardSantriController::class, 'storeProvinsi']);
+    Route::get('/validasi-pendaftaran', [DashboardSantriController::class, 'validasiPendaftaran']);
+    Route::post('/validasi-pendaftaran/{id}', [DashboardSantriController::class, 'updateValidasiPendaftaran']);
 
     Route::post('/getkabupaten', [DashboardSantriController::class, 'getkabupaten'])->name('getkabupaten');
     Route::post('/getkecamatan', [DashboardSantriController::class, 'getkecamatan'])->name('getkecamatan');
