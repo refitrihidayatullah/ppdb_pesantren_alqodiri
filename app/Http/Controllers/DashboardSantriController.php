@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 // use Excel;
 use App\Models\User;
+use Dotenv\Validator;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
@@ -15,11 +16,13 @@ use Illuminate\Http\Request;
 use App\Models\InformasiPpdb;
 use App\Models\StatusValidasi;
 use App\Imports\ProvinsiImport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrangTuaCalonSantri;
-use Dotenv\Validator;
+use Faker\Provider\Base;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -302,6 +305,30 @@ class DashboardSantriController extends Controller
             return redirect('/form-pendaftaran')->with('failed', 'Terjadi Kesalahan' . $e->getMessage())->withInput();
         }
     }
+
+    /**
+     * func cetak pendaftaran
+     */
+    public function cetakPendaftaran($id)
+    {
+        $path = public_path() . '/images/kop.png';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $image = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $file_name = "bukti_pendaftaran_" . "santri" . Carbon::now()->translatedFormat('d_F_y') . ".pdf";
+        $userSantri = User::with('CalonSantris', 'AlamatCalonSantri.alamatProvinsi', 'AlamatCalonSantri.alamatKabupaten', 'AlamatCalonSantri.alamatKecamatan', 'AlamatCalonSantri.alamatKelurahan', 'OrangTuaCalonSantri')->where('id_user', $id)->get();
+        $dataUserSantri = collect($userSantri)->reduce(function ($carry, $item) {
+            return $carry->merge(collect($item)->except('password'));
+        }, collect());
+        // dd($dataUserSantri);
+        // return view('pdf.siswa', ['image' => $image, 'get_data_user' => $get_data_user]);
+        $pdf = Pdf::loadView('pdf.buktiPendaftaran', compact('image', 'dataUserSantri'))->setPaper('a4', 'potrate')->setWarnings(false)->save($file_name);
+        // $response =  $pdf->download($file_name);
+        $response = $pdf->stream();
+        unlink(public_path() . "/" . $file_name);
+        return $response;
+    }
+
 
 
     /**
