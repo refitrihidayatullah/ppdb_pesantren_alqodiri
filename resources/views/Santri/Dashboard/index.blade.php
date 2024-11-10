@@ -40,7 +40,6 @@
             <div class="card">
                 <div class="card-body p-5">
                     <h3 class="text-center">Petunjuk Pendaftaran Santri</h3>
-                    <input type="text" value="{{$dataSantri['id_user']}}">
                      <h4 class="mt-4">1. Klik menu Formulir terlebih dahulu.</h4>
                      <h4 class="mt-4">2. Isi formulir dengan benar dan lengkap.</h4>
                      <h4 class="mt-4">3. Setelah selesai mengisi, klik tombol "Kirim".</h4>

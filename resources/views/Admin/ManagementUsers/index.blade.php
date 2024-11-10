@@ -12,14 +12,22 @@
             <!-- Nav tabs -->
             <div class="custom-tab-1">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#allusers">Semua Users</a>
+                    <li class="nav-item">
+                        <a class="nav-link {{Auth::user()->level == 'superadmin' ? 'active':''}}" data-toggle="tab" href="#allusers">Semua Users</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panitiausers">Users Panitia</a>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#panitiausers">Users Panitia</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#putrausers">Users calon santri putra</a>
+                    @if (Auth::user()->level == 'superadmin' || (Auth::user()->level == 'admin' && Auth::user()->jenkel == 'laki-laki'))
+                    <li class="nav-item">
+                        <a class="nav-link {{(Auth::user()->level == 'admin' && Auth::user()->jenkel == 'laki-laki') ? 'show':''}}" data-toggle="tab" href="#putrausers">Users calon santri putra</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#putriusers">Users calon santri putri</a>
+                    @endif
+                    @if (Auth::user()->level == 'superadmin' || (Auth::user()->level == 'admin' && Auth::user()->jenkel == 'perempuan'))
+                    <li class="nav-item">
+                        <a class="nav-link {{(Auth::user()->level === 'admin' && Auth::user()->jenkel == 'perempuan') ? 'show':''}}" data-toggle="tab" href="#putriusers">Users calon santri putri</a>
                     </li>
+                    @endif
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="allusers" role="tabpanel">
@@ -28,7 +36,9 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
-                                                <a href="{{url('/users/create')}}"   class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa-solid fa-plus"></i></i></span></a>
+                                            @if (Auth::user()->level == "superadmin")
+                                            <a href="{{url('/users/create')}}"   class="btn btn-primary btn-sm">Add <span class="btn-icon-right"><i class="fa-solid fa-plus"></i></i></span></a>
+                                            @endif
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered zero-configuration">
                                                     <thead>
@@ -37,6 +47,7 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
+                                                            <th>Jenis Kelamin</th>
                                                             <th>Status</th>
                                                             <th>Status Validasi</th>
                                                             <th>Action</th>
@@ -49,6 +60,7 @@
                                                             <td>{{$allUsers['name']??''}}</td>
                                                             <td>{{$allUsers['email']??''}}</td>
                                                             <td>{{$allUsers['no_hp']??''}}</td>
+                                                            <td>{{$allUsers['jenkel']??''}}</td>
                                                             <td>
                                                                 @if ($allUsers['level'] === "superadmin")                                                                  
                                                                 <span class="badge badge-dark">{{$allUsers['level']??''}}</span>
@@ -69,21 +81,29 @@
                                                                 <span class="badge badge-success">{{$allUsers['status_validasi']['nama_status_validasi']??''}}</span>
                                                                 @endif
                                                             </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
-                                                                <div class="dropdown-menu" style="overflow:hidden;"><a  class="dropdown-item" href="{{url("/users/".$allUsers['id_user']."/edit")}}">Edit</a>
+                                                            @if (Auth::user()->level == "superadmin")
+                                                                <td>
+                                                                    <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
+                                                                    <div class="dropdown-menu" style="overflow:hidden;"><a  class="dropdown-item" href="{{url("/users/".$allUsers['id_user']."/edit")}}">Edit</a>
                                                                     @if ($allUsers['status_validasi']['nama_status_validasi'] === 'in_progress' )                       
                                                                     <a class="dropdown-item" href="{{url("/form-pendaftaran/".$allUsers['id_user']."/edit")}}">Edit Form Pendaftaran</a>
                                                                     @endif
                                                                     @if ($allUsers['status_validasi']['nama_status_validasi'] === 'pending' )                       
-                                                                    <a class="dropdown-item" href="{{url('/form-pendaftaran')}}">Isi Form Pendaftaran</a>
+                                                                    <a class="dropdown-item" href="{{url("/form-pendaftaran-users/".$allUsers['id_user'])}}">Isi Form Pendaftaran</a>
+                                                                    @endif
+                                                                    @if ($allUsers['status_validasi']['nama_status_validasi'] === 'in_progress' || $allUsers['status_validasi']['nama_status_validasi'] === 'completed' )                       
+                                                                    <a class="dropdown-item" target="_blank" href="{{url("/form-pendaftaran-users/cetak-pdf/".$allUsers['id_user'])}}">Cetak pdf</a>
                                                                     @endif
 
                                                                     <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserModal{{$allUsers['id_user']}}" href="#">Delete</a>
                                                                 </div>
-                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
-                                                            
-                                                        </td>
+                                                            <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordModal{{$allUsers['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>   
+                                                            </td> 
+                                                            @else
+                                                            <td>
+                                                                <p class="text-danger text-center">accessDenied</p>
+                                                           </td>
+                                                            @endif
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
@@ -93,6 +113,7 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
+                                                            <th>Jenis Kelamin</th>
                                                             <th>Status</th>
                                                             <th>Status Validasi</th>
                                                             <th>Action</th>
@@ -121,6 +142,7 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
+                                                            <th>Jenis Kelamin</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -132,6 +154,7 @@
                                                             <td>{{$allPanitia['name']??''}}</td>
                                                             <td>{{$allPanitia['email']??''}}</td>
                                                             <td>{{$allPanitia['no_hp']??''}}</td>
+                                                            <td>{{$allPanitia['jenkel']??''}}</td>
                                                             <td>
                                                                 @if ($allPanitia['level'] === "superadmin")                                                                  
                                                                 <span class="badge badge-dark">{{$allPanitia['level']??''}}</span>
@@ -141,6 +164,7 @@
                                                                 <span class="badge badge-success">{{$allPanitia['level']??''}}</span>
                                                                 @endif
                                                             </td>
+                                                            @if (Auth::user()->level == "superadmin")
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
                                                             <button type="button" class="btn btn-sm mb-1 btn-warning" data-toggle="modal" data-target="#changePasswordPanitiaModal{{$allPanitia['id_user']}}" data-placement="top" title="Change Password"><i class="fa-solid fa-key"></i></button>
@@ -150,6 +174,11 @@
 
                                                             </div>
                                                             </td>
+                                                            @else
+                                                            <td>
+                                                                <p class="text-danger text-center">accessDenied</p>                                                               
+                                                            </td>
+                                                            @endif
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
@@ -159,6 +188,7 @@
                                                             <th>Nama</th>
                                                             <th>Email</th>
                                                             <th>No Hp</th>
+                                                            <th>Jenis Kelamin</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -199,10 +229,11 @@
                                                             <td>{{$userPutra['name']??''}}</td>
                                                             <td>{{$userPutra['email']??''}}</td>
                                                             <td>{{$userPutra['no_hp']??''}}</td>
-                                                            <td>{{$userPutra['calon_santris']['jenis_kelamin_santri']??''}}</td>
+                                                            <td>{{$userPutra['jenkel']??''}}</td>
                                                             <td>       
                                                                 <span class="badge badge-success">{{$userPutra['status_validasi']['nama_status_validasi']??''}}</span>
                                                             </td>
+                                                          
                                                             <td>
                                                             <button type="button" class="btn btn-sm mb-1 btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilih</button>
                                                            
@@ -213,8 +244,14 @@
                                                                 @if ($userPutra['status_validasi']['nama_status_validasi'] === 'in_progress' )                       
                                                                 <a class="dropdown-item" href="{{url("/form-pendaftaran/".$userPutra['id_user']."/edit")}}">Edit Form Pendaftaran</a>
                                                                 @endif
+                                                                @if ($userPutra['status_validasi']['nama_status_validasi'] === 'pending' )                       
+                                                                <a class="dropdown-item" href="{{url("/form-pendaftaran-putra/".$userPutra['id_user'])}}">Isi Form Pendaftaran</a>
+                                                                @endif
+                                                                @if ($userPutra['status_validasi']['nama_status_validasi'] === 'in_progress' ||$userPutra['status_validasi']['nama_status_validasi'] === 'completed')
+                                                                <a class="dropdown-item" target="_blank" href="{{url("/form-pendaftaran-users/cetak-pdf/".$userPutra['id_user'])}}">Cetak pdf</a>
+                                                                @endif
                                                             </div>
-                                                            </td>
+                                                            </td>                                                
                                                         </tr>
                                                         @endforeach
                                            
@@ -266,7 +303,7 @@
                                                             <td>{{$userPutri['name']??''}}</td>
                                                             <td>{{$userPutri['email']??''}}</td>
                                                             <td>{{$userPutri['no_hp']??''}}</td>
-                                                            <td>{{$userPutri['calon_santris']['jenis_kelamin_santri']??''}}</td>
+                                                            <td>{{$userPutri['jenkel']??''}}</td>
                                                             <td>       
                                                                 <span class="badge badge-success">{{$userPutri['status_validasi']['nama_status_validasi']??''}}</span>
                                                             </td>
@@ -279,6 +316,12 @@
                                                                 <a class="dropdown-item" data-toggle="modal" data-target="#deleteUserPutriModal{{$userPutri['id_user']}}" href="#">Delete</a>
                                                                 @if ($userPutri['status_validasi']['nama_status_validasi'] === 'in_progress' )                       
                                                                 <a class="dropdown-item" href="{{url("/form-pendaftaran/".$userPutri['id_user']."/edit")}}">Edit Form Pendaftaran</a>
+                                                                @endif
+                                                                @if ($userPutri['status_validasi']['nama_status_validasi'] === 'pending' )                       
+                                                                <a class="dropdown-item" href="{{url("/form-pendaftaran-putri/".$userPutri['id_user'])}}">Isi Form Pendaftaran</a>
+                                                                @endif
+                                                                @if ($userPutri['status_validasi']['nama_status_validasi'] === 'in_progress' || $userPutri['status_validasi']['nama_status_validasi'] === 'completed')
+                                                                <a class="dropdown-item" target="_blank" href="{{url("/form-pendaftaran-users/cetak-pdf/".$userPutri['id_user'])}}">Cetak pdf</a>   
                                                                 @endif
                                                             </div>
                                                             </td>

@@ -19,13 +19,7 @@ class ProvinsiImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        // foreach ($rows as $row) {
-        //     Kabupaten::create([
-        //         'id_kabupaten' => (int)$row[0],
-        //         'provinsi_id' => $row[1],
-        //         'name' => $row[2],
-        //     ]);
-        // }
+        // import data provinsi
         // foreach ($rows as $row) {
         //     Provinsi::create([
         //         'id_provinsi' => (int)$row[0],
@@ -34,6 +28,16 @@ class ProvinsiImport implements ToCollection
         // }
         // dd($rows);
 
+        // import data kabupaten
+        // foreach ($rows as $row) {
+        //     Kabupaten::create([
+        //         'id_kabupaten' => (int)$row[0],
+        //         'provinsi_id' => $row[1],
+        //         'name' => $row[2],
+        //     ]);
+        // }
+
+        // import data kecamatan
         // foreach ($rows as $row) {
         //     Kecamatan::create([
         //         'id_kecamatan' => (int) $row[0],
@@ -41,13 +45,9 @@ class ProvinsiImport implements ToCollection
         //         'name' => $row[2],
         //     ]);
         // }
-        // foreach ($rows as $row) {
-        //     Kelurahan::create([
-        //         'id_kelurahan' => (int)$row[0],
-        //         'kecamatan_id' => (int)$row[1],
-        //         'name' => $row[2]
-        //     ]);
-        // }
+
+
+        // import kelurahan
         // jika data banyak kita bisa menggunakan proccessing bath
         $batchSize = 1000;
         $dataBatch = [];

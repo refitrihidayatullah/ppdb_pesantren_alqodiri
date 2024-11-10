@@ -39,17 +39,25 @@
               </div>
               <div class="data__hero">
                 <div class="title__hero">
-                  <span>Pendaftaran santri baru</span>
+                  <span>{{$dataGeneral->title_web??'-'}}</span>
                 </div>
                 <div class="subtitle__hero">
-                  <span>pondok pesantren alqodiri jember</span>
+                  <span>{{$dataGeneral->sub_title_web??'-'}}</span>
                 </div>
+                @php
+                    use Carbon\Carbon;
+                @endphp
                 <div class="description__hero">
                   <p>
-                    PP alqodiri jember boarding school for education and science
+                    {{$dataGeneral->data_title_web??'-'}}
                   </p>
-                  <span>tahun ajaran 2024 - 2025</span>
-                </div>
+                  <span>tahun ajaran
+                    
+                    {{ $dataGeneral && $dataGeneral->dari_tahun_ajaran_web ? Carbon::parse($dataGeneral->dari_tahun_ajaran_web)->format('Y') : '-' }}
+                    - 
+                    {{ $dataGeneral && $dataGeneral->sampai_tahun_ajaran_web ? Carbon::parse($dataGeneral->sampai_tahun_ajaran_web)->format('Y') : '-' }}
+                  </span>
+                  </div>
                 <a href="{{url('/register')}}">Daftar Sekarang!</a>
               </div>
             </div>
@@ -64,87 +72,28 @@
           </div>
           <div class="wrapper__alur__pendaftaran">
             <div class="garis"></div>
+
+            @foreach ($dataAlurPendaftaran as $alurPendaftaran)
+                
             <div class="card__alur__pendaftaran">
               <div class="header__card">
                 <div class="header__number">
                   <span>1</span>
                 </div>
                 <div class="header__title">
-                  <span>pembuatan akun</span>
+                  <span>{{$alurPendaftaran->title_alur_pendaftaran_online??'-'}}</span>
                 </div>
               </div>
               <div class="content__card">
                 <p>
-                  Mengisi formulir pembuatan akun untuk mendapatkan Nomor
-                  Registrasi.
+                 {{$alurPendaftaran->sub_title_alur_pendaftaran_online??'-'}}
                 </p>
               </div>
             </div>
 
-            <div class="card__alur__pendaftaran">
-              <div class="header__card">
-                <div class="header__number">
-                  <span>2</span>
-                </div>
-                <div class="header__title">
-                  <span>Login & Melengkapi Data</span>
-                </div>
-              </div>
-              <div class="content__card">
-                <p>
-                  Melengkapi data peserta didik, data orang tua / wali atau
-                  mahrom khususnya santri putri.
-                </p>
-              </div>
-            </div>
+            @endforeach
 
-            <div class="card__alur__pendaftaran">
-              <div class="header__card">
-                <div class="header__number">
-                  <span>3</span>
-                </div>
-                <div class="header__title">
-                  <span>Mengunggah Berkas</span>
-                </div>
-              </div>
-              <div class="content__card">
-                <p>
-                  Mengunggah berkas persyaratan dan berkas pendukung lainnya
-                  yang berupa gambar / foto.
-                </p>
-              </div>
-            </div>
 
-            <div class="card__alur__pendaftaran">
-              <div class="header__card">
-                <div class="header__number">
-                  <span>4</span>
-                </div>
-                <div class="header__title">
-                  <span>Cetak Pendaftaran</span>
-                </div>
-              </div>
-              <div class="content__card">
-                <p>
-                  Cetak atau simpan Nomor Registrasi sebagai bukti pendaftaran
-                  untuk ditunjukkan ke petugas PSB.
-                </p>
-              </div>
-            </div>
-
-            <div class="card__alur__pendaftaran">
-              <div class="header__card">
-                <div class="header__number">
-                  <span>5</span>
-                </div>
-                <div class="header__title">
-                  <span>Menyerahkan bukti</span>
-                </div>
-              </div>
-              <div class="content__card">
-                <p>Menyerahkan bukti pendaftaran secara offline.</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -165,56 +114,25 @@
               </div>
               <div class="data__syarat">
                 <ul>
+                  @foreach ($dataSyaratPendaftaran as $syaratPendaftaran)
+                      
                   <li>
                     <div class="icon__syarat">
                       <i class="fa-solid fa-check"></i>
                     </div>
                     <div class="data__syarat__content">
-                      <span>Photo Copy Akta Kelahiran Peserta Didik</span>
+                      <span>{{$syaratPendaftaran->title_syarat_pendaftaran??'-'}}</span>
+                      <p>{{$syaratPendaftaran->sub_title_syarat_pendaftaran??'-'}}</p>
                     </div>
                   </li>
-                  <li>
-                    <div class="icon__syarat">
-                      <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="data__syarat__content">
-                      <span>Photo Copy KTP orang tua/wali</span>
-                      <p>sebanyak 3 lembar</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon__syarat">
-                      <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="data__syarat__content">
-                      <span>Photo Copy Kartu Keluarga (KK)</span>
-                      <p>sebanyak 3 lembar</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon__syarat">
-                      <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="data__syarat__content">
-                      <span>Photo Copy STL/SKHUN/Ijazah</span>
-                      <p>sebanyak 3 lembar</p>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon__syarat">
-                      <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="data__syarat__content">
-                      <span
-                        >Surat Keterangan Sehat dari Fasilitas Kesehatan</span
-                      >
-                    </div>
-                  </li>
+                    @endforeach
+      
+
                 </ul>
               </div>
             </div>
             <div class="content__syarat__image">
-              <img src="{{asset('assets/images/img/pendaftaran.jpg')}}" alt="pendaftaran" />
+              <img src="{{$dataImageSyaratPendaftaran?asset('content_images/'.$dataImageSyaratPendaftaran->image_syarat):asset('assets/images/img/pendaftaran.jpg')}}" alt="pendaftaran" />
             </div>
           </div>
         </div>
@@ -228,10 +146,12 @@
             <p><span>alur</span> penyerahan santri</p>
           </div>
           <div class="wrapper__penyerahan__santri">
+            @foreach ( $dataAlurPenyerahan as $alurPenyerahan)
+                
             <div class="card__santri">
               <div class="card__content__santri">
                 <div class="titles__santri">
-                  <span>Konfirmasi Nomor Registrasi</span>
+                  <span>{{$alurPenyerahan->title_alur_penyerahan_santri??'-'}}</span>
                 </div>
                 <div class="number__santri">
                   <span>1</span>
@@ -239,79 +159,13 @@
               </div>
               <div class="card__body__santri">
                 <p>
-                  Menyerahkan Nomor Registrasi dan bukti pendaftaran online
-                  kepada petugas PSB.
+                 {{$alurPenyerahan->sub_title_alur_penyerahan_santri??'-'}}
                 </p>
               </div>
             </div>
+            @endforeach
 
-            <div class="card__santri">
-              <div class="card__content__santri">
-                <div class="titles__santri">
-                  <span>Ikrar Santri</span>
-                </div>
-                <div class="number__santri">
-                  <span>2</span>
-                </div>
-              </div>
-              <div class="card__body__santri">
-                <p>
-                  Melakukan Ikrar Santri dan kesediaan mengikuti aturan yang
-                  ditetapkan oleh Pondok Pesantren Al Qodiri Jember.
-                </p>
-              </div>
-            </div>
 
-            <div class="card__santri">
-              <div class="card__content__santri">
-                <div class="titles__santri">
-                  <span>Pengambilan Seragam</span>
-                </div>
-                <div class="number__santri">
-                  <span>3</span>
-                </div>
-              </div>
-              <div class="card__body__santri">
-                <p>
-                  Pengambilan seragam sesuai dengan pemilihan ukuran seragam
-                  yang telah dipilih oleh pendaftar.
-                </p>
-              </div>
-            </div>
-
-            <div class="card__santri">
-              <div class="card__content__santri">
-                <div class="titles__santri">
-                  <span>Sowan Pengasuh</span>
-                </div>
-                <div class="number__santri">
-                  <span>4</span>
-                </div>
-              </div>
-              <div class="card__body__santri">
-                <p>
-                  Penyerahan calon peserta didik oleh orangtua / wali kepada
-                  pengasuh.
-                </p>
-              </div>
-            </div>
-
-            <div class="card__santri">
-              <div class="card__content__santri">
-                <div class="titles__santri">
-                  <span>Asrama Santri</span>
-                </div>
-                <div class="number__santri">
-                  <span>5</span>
-                </div>
-              </div>
-              <div class="card__body__santri">
-                <p>
-                  Santri baru menempati asrama yang telah ditetepkan oleh
-                  pengurus.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -322,7 +176,7 @@
           <div class="wrapper__informasi__pelayanan">
             <div class="content__informasi__pelayanan__image">
               <img
-                src="{{asset('assets/images/img/pendaftaran.jpg')}}"
+                src="{{$dataImageInformasiPelayanan ? asset('content_images/'.$dataImageInformasiPelayanan->image_informasi):asset('assets/images/img/pendaftaran.jpg')}}"
                 alt="informasi pelayanan pendaftaran"
               />
             </div>
@@ -340,11 +194,11 @@
                   </div>
                   <div class="accordion__content">
                     <p>Tanggal:</p>
-                    <span>1 Maret ~ 8 Juli 2024</span>
+                    <span>{{$dataInformasiPelayanan && $dataInformasiPelayanan->dari_tanggal_pembukaan_pendaftaran ? Carbon::parse($dataInformasiPelayanan->dari_tanggal_pembukaan_pendaftaran)->format('d-M-Y'):'-'}} ~ {{$dataInformasiPelayanan && $dataInformasiPelayanan->sampai_tanggal_pembukaan_pendaftaran ? Carbon::parse($dataInformasiPelayanan->sampai_tanggal_pembukaan_pendaftaran)->format('d-M-Y'):'-'}}</span>
                     <p>Layanan Putra:</p>
-                    <span> Kantor Sekretariat Putra </span>
+                    <span> {{$dataInformasiPelayanan->layanan_putra??'-'}} </span>
                     <p>Layanan Putri:</p>
-                    <span> Kantor Sekretariat Putri</span>
+                    <span> {{$dataInformasiPelayanan->layanan_putri??'-'}}</span>
                   </div>
                 </div>
 
@@ -355,9 +209,9 @@
                   </div>
                   <div class="accordion__content">
                     <p>Tanggal:</p>
-                    <span>3 juli ~ 8 Juli 2024</span>
+                    <span>{{$dataInformasiPelayanan && $dataInformasiPelayanan->dari_tanggal_verifikasi_berkas ? Carbon::parse($dataInformasiPelayanan->dari_tanggal_verifikasi_berkas)->format('d-M-Y'):'-'}} ~ {{$dataInformasiPelayanan && $dataInformasiPelayanan->sampai_tanggal_verifikasi_berkas ? Carbon::parse($dataInformasiPelayanan->sampai_tanggal_verifikasi_berkas)->format('d-M-Y'):'-'}}</span>
                     <p>Tempat Penerimaan:</p>
-                    <span>Aula II Pesantren, Lantai 3</span>
+                    <span>{{$dataInformasiPelayanan->tempat_verifikasi_berkas??'-'}}</span>
                   </div>
                 </div>
                 <div class="accordion">
@@ -367,9 +221,9 @@
                   </div>
                   <div class="accordion__content">
                     <p>Pagi:</p>
-                    <span> 08.00 ~ 12.00 WIB</span>
+                    <span>{{$dataInformasiPelayanan && $dataInformasiPelayanan->dari_pelayanan_waktu_pagi ? Carbon::parse($dataInformasiPelayanan->dari_pelayanan_waktu_pagi)->format('H:i'):'-'}}~ {{$dataInformasiPelayanan && $dataInformasiPelayanan->sampai_pelayanan_waktu_pagi ? Carbon::parse($dataInformasiPelayanan->sampai_pelayanan_waktu_pagi)->format('H:i'):'-'}} WIB</span>
                     <p>Siang:</p>
-                    <span>13.00 ~ 16.00 WIB</span>
+                    <span>{{$dataInformasiPelayanan && $dataInformasiPelayanan->dari_pelayanan_waktu_siang ? Carbon::parse($dataInformasiPelayanan->dari_pelayanan_waktu_siang)->format('H:i'):'-'}} ~ {{$dataInformasiPelayanan && $dataInformasiPelayanan->sampai_pelayanan_waktu_siang ? Carbon::parse($dataInformasiPelayanan->sampai_pelayanan_waktu_siang)->format('H:i'):'-'}} WIB</span>
                   </div>
                 </div>
               </div>
@@ -409,20 +263,20 @@
           <div class="wrapper__footer">
             <div class="alamat__footer">
               <div class="title__alamat__footer">
-                <span>pondok pesantren Al-Qodiri Jember</span>
+                <span>{{$dataGeneral->sub_title_web??'-'}}</span>
               </div>
               <div class="data__alamat">
                 <ul>
                   <li>
                     <p>
-                      Jl. Manggar No.139A, Gebang Poreng Jember Jawa Timur,68117
+                      {{$dataGeneral->alamat_pondok??'-'}}
                     </p>
                   </li>
                   <li>
-                    <p>Telp: +62-821-4038-4613</p>
+                    <p>Telp: {{$dataGeneral->no_telp_pondok??'-'}}</p>
                   </li>
                   <li>
-                    <p>Email: pesantren@alqodiri.net</p>
+                    <p>Email: {{$dataGeneral->email_pondok??'-'}}</p>
                   </li>
                 </ul>
               </div>
@@ -435,7 +289,7 @@
                 <li>
                   <i class="fa-brands fa-facebook"></i>
                   <a
-                    href="https://www.facebook.com/pp.alqodiri/?locale=id_ID"
+                    href="{{$dataGeneral->facebook_pondok??'-'}}"
                     target="_blank"
                     >Facebook</a
                   >
@@ -443,7 +297,7 @@
                 <li>
                   <i class="fa-brands fa-square-instagram"></i>
                   <a
-                    href="https://www.instagram.com/pesantrenalqodiri.1_jember/"
+                    href="{{$dataGeneral->instagram_pondok??'-'}}"
                     target="_blank"
                     >Instagram</a
                   >
@@ -451,7 +305,7 @@
                 <li>
                   <i class="fa-brands fa-youtube"></i>
                   <a
-                    href="https://www.youtube.com/@pondokpesantrenal-qodiri1j466"
+                    href="{{$dataGeneral->youtube_pondok??'-'}}"
                     target="_blank"
                     >Youtube</a
                   >
@@ -459,7 +313,7 @@
                 <li>
                   <i class="fa-brands fa-tiktok"></i>
                   <a
-                    href="https://www.tiktok.com/@alqodiriputrijember"
+                    href="{{$dataGeneral->tiktok_pondok??'-'}}"
                     target="_blank"
                     >Tiktok</a
                   >
@@ -470,13 +324,13 @@
               <div class="contact__title__footer">
                 <span>Contact Us</span>
               </div>
-              <p>+62-821-4038-4613 (Layanan Umum)</p>
+              <p>{{$dataGeneral->no_telp_pondok??'-'}} (Layanan Umum)</p>
             </div>
           </div>
         </div>
         <div class="footer__copyright">
           <span>
-            © Pondok Pesantren Alqodiri Jember 2024 | Developer By
+            © Pondok Pesantren Alqodiri Jember {{Carbon::now()->format('Y')}} | Developer By
             <a target="_blank" href="https://refitrihidayatullah.github.io/"
               >Refi Tri Hidayatullah</a
             >

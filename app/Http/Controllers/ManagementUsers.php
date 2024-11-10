@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\View\View;
 use App\Models\CalonSantri;
 use Illuminate\Http\Request;
 use App\Models\InformasiPpdb;
 use App\Models\StatusValidasi;
+use Barryvdh\DomPDF\Facade\Pdf;
 use function PHPSTORM_META\map;
 use App\Models\AlamatCalonSantri;
 use App\Validators\ValidatorRules;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrangTuaCalonSantri;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 
@@ -27,25 +29,34 @@ class ManagementUsers extends Controller
     public function index(): View
     {
         // get data user putri
+        // $userPutri = User::with('statusValidasi', 'calonSantris')
+        //     ->where('level', 'calonsantri')
+        //     ->whereHas('calonSantris', function ($query) {
+        //         $query->where('jenis_kelamin_santri', 'perempuan');
+        //     })
+        //     ->get();
         $userPutri = User::with('statusValidasi', 'calonSantris')
             ->where('level', 'calonsantri')
-            ->whereHas('calonSantris', function ($query) {
-                $query->where('jenis_kelamin_santri', 'perempuan');
-            })
+            ->where('jenkel', 'perempuan')
             ->get();
         $dataUserPutri = $userPutri->map(function ($putra) {
             return collect($putra)->except('password');
         });
         // get data user putra
+        // $userPutra = User::with('statusValidasi', 'calonSantris')
+        //     ->where('level', 'calonsantri')
+        //     ->whereHas('calonSantris', function ($query) {
+        //         $query->where('jenis_kelamin_santri', 'laki-laki');
+        //     })
+        //     ->get();
         $userPutra = User::with('statusValidasi', 'calonSantris')
             ->where('level', 'calonsantri')
-            ->whereHas('calonSantris', function ($query) {
-                $query->where('jenis_kelamin_santri', 'laki-laki');
-            })
+            ->where('jenkel', 'laki-laki')
             ->get();
         $dataUserPutra = $userPutra->map(function ($putra) {
             return collect($putra)->except('password');
         });
+
         // dd($dataUserPutra);
         // get data panitia[admin,superadmin]
         // $dataAllPanitia = User::getAllPanitia();
@@ -56,11 +67,14 @@ class ManagementUsers extends Controller
         // dd($dataAllPanitia);
         // array level user
         $statusUser = [
-            'calonsantri', 'admin', 'superadmin'
+            'calonsantri',
+            'admin',
+            'superadmin'
         ];
 
         $statusPanitia = [
-            'admin', 'superadmin'
+            'admin',
+            'superadmin'
         ];
 
         //get data alluser
@@ -79,9 +93,12 @@ class ManagementUsers extends Controller
     public function create(): View
     {
         $statusUser = [
-            'calonsantri', 'admin', 'superadmin'
+            'calonsantri',
+            'admin',
+            'superadmin'
         ];
-        return view('Admin.ManagementUsers.AllUsers.create', compact('statusUser'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.AllUsers.create', compact('statusUser', 'jenis_kelamin'));
     }
     /**
      * func menampilkan data create users panitia :view
@@ -89,9 +106,11 @@ class ManagementUsers extends Controller
     public function createPanitia(): View
     {
         $statusUser = [
-            'admin', 'superadmin'
+            'admin',
+            'superadmin'
         ];
-        return view('Admin.ManagementUsers.PanitiaUsers.create', compact('statusUser'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PanitiaUsers.create', compact('statusUser', 'jenis_kelamin'));
     }
     /**
      * func menampilkan data create users putra :view
@@ -101,7 +120,8 @@ class ManagementUsers extends Controller
         $statusUser = [
             'calonsantri'
         ];
-        return view('Admin.ManagementUsers.PutraUsers.create', compact('statusUser'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PutraUsers.create', compact('statusUser', 'jenis_kelamin'));
     }
     /**
      * func menampilkan data create users putri :view
@@ -111,7 +131,8 @@ class ManagementUsers extends Controller
         $statusUser = [
             'calonsantri'
         ];
-        return view('Admin.ManagementUsers.PutriUsers.create', compact('statusUser'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PutriUsers.create', compact('statusUser', 'jenis_kelamin'));
     }
     /**
      * func menampilkan data edit all users :view
@@ -121,14 +142,17 @@ class ManagementUsers extends Controller
         $dataUser =  User::getUserById($id);
         if ($dataUser->level == "superadmin" || $dataUser->level == "admin") {
             $statusUser = [
-                'admin', 'superadmin'
+                'admin',
+                'superadmin'
             ];
+            $jenis_kelamin = ['laki-laki', 'perempuan'];
         } else {
             $statusUser = [
                 'calonsantri'
             ];
+            $jenis_kelamin = ['laki-laki', 'perempuan'];
         }
-        return view('Admin.ManagementUsers.AllUsers.edit', compact('statusUser', 'dataUser'));
+        return view('Admin.ManagementUsers.AllUsers.edit', compact('statusUser', 'dataUser', 'jenis_kelamin'));
     }
 
     /**
@@ -138,9 +162,11 @@ class ManagementUsers extends Controller
     {
         $dataPanitia = User::getUserById($id);
         $statusUser = [
-            'admin', 'superadmin'
+            'admin',
+            'superadmin'
         ];
-        return view('Admin.ManagementUsers.PanitiaUsers.edit', compact('statusUser', 'dataPanitia'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PanitiaUsers.edit', compact('statusUser', 'dataPanitia', 'jenis_kelamin'));
     }
 
     /**
@@ -152,7 +178,8 @@ class ManagementUsers extends Controller
         $statusUser = [
             'calonsantri'
         ];
-        return view('Admin.ManagementUsers.PutraUsers.edit', compact('statusUser', 'dataPutra'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PutraUsers.edit', compact('statusUser', 'dataPutra', 'jenis_kelamin'));
     }
 
     /**
@@ -164,7 +191,8 @@ class ManagementUsers extends Controller
         $statusUser = [
             'calonsantri'
         ];
-        return view('Admin.ManagementUsers.PutriUsers.edit', compact('statusUser', 'dataPutri'));
+        $jenis_kelamin = ['laki-laki', 'perempuan'];
+        return view('Admin.ManagementUsers.PutriUsers.edit', compact('statusUser', 'dataPutri', 'jenis_kelamin'));
     }
 
 
@@ -227,6 +255,7 @@ class ManagementUsers extends Controller
                         'name' => $request->panitiaName,
                         'email' => $request->panitiaEmail,
                         'no_hp' => $request->panitiaNo_hp,
+                        'jenkel' => $request->panitiaJenkel,
                         'level' => $request->panitiaLevel,
                         'password' => Hash::make($password11),
                     ];
@@ -269,6 +298,7 @@ class ManagementUsers extends Controller
                         'name' => $request->putraName,
                         'email' => $request->putraEmail,
                         'no_hp' => $request->putraNo_hp,
+                        'jenkel' => $request->putraJenkel,
                         'level' => $request->putraLevel,
                         'password' => Hash::make($password11),
                     ];
@@ -311,6 +341,7 @@ class ManagementUsers extends Controller
                         'name' => $request->putriName,
                         'email' => $request->putriEmail,
                         'no_hp' => $request->putriNo_hp,
+                        'jenkel' => $request->putriJenkel,
                         'level' => $request->putriLevel,
                         'password' => Hash::make($password11),
                     ];
@@ -351,12 +382,13 @@ class ManagementUsers extends Controller
                 'name' => $request->updateName,
                 'email' => $request->updateEmail,
                 'no_hp' => $request->updateNo_hp,
+                'jenkel' => $request->updateJenkel,
                 'level' => $request->updateLevel,
             ];
             User::updateUser($data, $id);
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
-            return redirect('/users')->with('failed', 'Terjadi Kesalahan' . $e->getMessage());
+            return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
     }
 
@@ -377,6 +409,7 @@ class ManagementUsers extends Controller
                 'name' => $request->updatePanitiaName,
                 'email' => $request->updatePanitiaEmail,
                 'no_hp' => $request->updatePanitiaNo_hp,
+                'jenkel' => $request->updatePanitiaJenkel,
                 'level' => $request->updatePanitiaLevel,
             ];
             User::updateUserPanitia($data, $id);
@@ -402,6 +435,7 @@ class ManagementUsers extends Controller
                 'name' => $request->updatePutraName,
                 'email' => $request->updatePutraEmail,
                 'no_hp' => $request->updatePutraNo_hp,
+                'jenkel' => $request->updatePutraJenkel,
                 'level' => $request->updatePutraLevel,
             ];
             User::updateUserPutra($data, $id);
@@ -426,6 +460,7 @@ class ManagementUsers extends Controller
                 'name' => $request->updatePutriName,
                 'email' => $request->updatePutriEmail,
                 'no_hp' => $request->updatePutriNo_hp,
+                'jenkel' => $request->updatePutriJenkel,
                 'level' => $request->updatePutriLevel,
             ];
             User::updateUserPutri($data, $id);
@@ -441,7 +476,19 @@ class ManagementUsers extends Controller
     public function destroy($id): RedirectResponse
     {
         try {
-            User::deleteUser($id);
+            $data_user = User::where('id_user', $id)->first();
+            if ($data_user) {
+                // cek ada image lama
+                if ($data_user->image) {
+                    $image_path = public_path('calon_santri_images') . '/' . $data_user->image;
+                    // Jika file gambar ada, hapus file gambar
+                    if (file_exists($image_path)) {
+                        File::delete($image_path);
+                    }
+                }
+                // delete data user setelah memproses file gambar
+                User::deleteUser($id);
+            }
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
@@ -453,7 +500,16 @@ class ManagementUsers extends Controller
     public function destroyPanitia($id): RedirectResponse
     {
         try {
-            User::deleteUserPanitia($id);
+            $data_user = User::where('id_user', $id)->first();
+            if ($data_user) {
+                $image_path = public_path('calon_santri_images') . '/' . $data_user->image;
+                // Jika file gambar ada, hapus file gambar
+                if (file_exists($image_path)) {
+                    File::delete($image_path);
+                }
+                // delete data user setelah memproses file gambar
+                User::deleteUserPanitia($id);
+            }
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
@@ -465,7 +521,16 @@ class ManagementUsers extends Controller
     public function destroyPutra($id): RedirectResponse
     {
         try {
-            User::deleteUserPutra($id);
+            $data_user = User::where('id_user', $id)->first();
+            if ($data_user) {
+                $image_path = public_path('calon_santri_images') . '/' . $data_user->image;
+                // Jika file gambar ada, hapus file gambar
+                if (file_exists($image_path)) {
+                    File::delete($image_path);
+                }
+                // delete data user setelah memproses file gambar
+                User::deleteUserPutra($id);
+            }
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
@@ -477,7 +542,16 @@ class ManagementUsers extends Controller
     public function destroyPutri($id): RedirectResponse
     {
         try {
-            User::deleteUserPutri($id);
+            $data_user = User::where('id_user', $id)->first();
+            if ($data_user) {
+                $image_path = public_path('calon_santri_images') . '/' . $data_user->image;
+                // Jika file gambar ada, hapus file gambar
+                if (file_exists($image_path)) {
+                    File::delete($image_path);
+                }
+                // delete data user setelah memproses file gambar
+                User::deleteUserPutri($id);
+            }
             return redirect('/users')->with('message', 'success');
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
@@ -557,5 +631,39 @@ class ManagementUsers extends Controller
         } catch (\Exception $e) {
             return redirect('/users')->with('failed', 'Terjadi Kesalahan');
         }
+    }
+    /**
+     * func cetak pdf pendaftaran --management user
+     */
+    public function cetakPdfFormCalonSantri($id)
+    {
+        $path = public_path() . '/images/kop.png';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $image = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $userSantri = User::with('CalonSantris', 'AlamatCalonSantri.alamatProvinsi', 'AlamatCalonSantri.alamatKabupaten', 'AlamatCalonSantri.alamatKecamatan', 'AlamatCalonSantri.alamatKelurahan', 'OrangTuaCalonSantri')->where('id_user', $id)->get();
+        $dataUserSantri = collect($userSantri)->reduce(function ($carry, $item) {
+            return $carry->merge(collect($item)->except('password'));
+        }, collect());
+
+        if ($dataUserSantri['image']) {
+            $path_santri = public_path() . '/calon_santri_images/' . $dataUserSantri['image'];
+            $type_santri = pathinfo($path_santri, PATHINFO_EXTENSION);
+            $data_santri = file_get_contents($path_santri);
+            $image_santri = 'data:image/' . $type_santri . ';base64,' . base64_encode($data_santri);
+            // dd($image_santri);
+        } else {
+            $image_santri = false;
+        }
+        // dd($dataUserSantri);
+        $file_name = "bukti_pendaftaran_" . "santri" . Carbon::now()->translatedFormat('d_F_y') . ".pdf";
+        // dd($dataUserSantri['image']);
+        // return view('pdf.siswa', ['image' => $image, 'get_data_user' => $get_data_user]);
+        $pdf = Pdf::loadView('pdf.buktiPendaftaran', compact('image_santri', 'image', 'dataUserSantri'))->setPaper('a4', 'potrate')->setWarnings(false)->save($file_name);
+        $response =  $pdf->download($file_name);
+        // $response = $pdf->stream();
+        unlink(public_path() . "/" . $file_name);
+        return $response;
     }
 }

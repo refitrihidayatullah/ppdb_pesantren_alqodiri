@@ -17,7 +17,8 @@ class AuthenticateController extends Controller
 {
     public function register(): View
     {
-        return view('Auth.register');
+        $jeniskelamin = ['laki-laki', 'perempuan'];
+        return view('Auth.register', compact('jeniskelamin'));
     }
     public function register_action(Request $request): RedirectResponse
     {

@@ -25,6 +25,9 @@
         }
     </style>
     <body>
+      @php
+           use Carbon\Carbon;
+      @endphp
         <div class="container">
             <div class="kopsurat">
                 <img style="width:100%;height:100px; " src="{{ $image }}" alt="" />
@@ -45,7 +48,7 @@
                                 </tr>
                                 <tr>
                                   <td style=" font-size:12px;line-height: 1.5;">3. Tanggal masuk*</td>
-                                  <td style="font-size:12px;line-height: 1.5;">: {{$dataUserSantri['calon_santris']['nama_lengkap_santri']??''}}</td>
+                                  <td style="font-size:12px;line-height: 1.5;">: {{ isset($dataUserSantri['calon_santris']['tanggal_daftar']) ? Carbon::parse($dataUserSantri['calon_santris']['tanggal_daftar'])->format('d M Y'):'-'}}</td>
                                 </tr>
                                 <tr>
                                   <td style=" font-size:12px;line-height: 1.5;">4. Tempat lahir*</td>
@@ -53,7 +56,7 @@
                                 </tr>
                                 <tr>
                                   <td style=" font-size:12px;line-height: 1.5;">5. Tanggal lahir</td>
-                                  <td style="font-size:12px;line-height: 1.5;">: {{$dataUserSantri['calon_santris']['tanggal_lahir_santri']??''}}</td>
+                                  <td style="font-size:12px;line-height: 1.5;">: {{ isset($dataUserSantri['calon_santris']['tanggal_lahir_santri']) ? Carbon::parse($dataUserSantri['calon_santris']['tanggal_lahir_santri'])->format('d M Y'):'-'}}</td>
                                 </tr>
                                 <tr>
                                   <td style=" font-size:12px;line-height: 1.5;">6. Alamat lengkap</td>
@@ -85,15 +88,20 @@
                                   </tr>
                                
                               </table>
+        
                               <div class="foto_santri" style="width:20%;float:right;margin-top:20px;margin-left:200px;">
-                                <div style="border: 1px solid black; height:100px;width:95px;">
+                                <div style="border: 1px solid black; height:100px;width:95px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                                  @if ($image_santri)
+                                  <img src="{{ $image_santri }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">    
+                                  @else
                                     <p style="text-align: center">FOTO</p>
                                     <p style="text-align: center">3 x 4</p>
+                                  @endif
                                 </div>
-                              </div>
+                            </div>
                         </div>
                         <div class="content_orangtua_data clearfix" >
-                            <table style="width:75%;float:left;" >
+                            <table style="width:62%;float:left;" >
                                 <p style="font-size:13px; font-weight: bold;text-decoration: underline;">ORANG TUA / WALI</p>
                                 <tr>
                                   <td style=" font-size:12px;line-height: 1.5;">1. Nama ayah*</td>
@@ -125,7 +133,7 @@
                                     bersedia sepenuhnya mentaati segala aturan pesantren yang berada di Buku Perizinan dan Peraturan Undang
                                     -Undang Santri. Hal ini dibuktikan dengan tanda tangan saya dan anak saya dibawah ini.
                                 </p>
-                                <p style="width:100%;text-align: right;font-size:13px;line-height: 1.5;">Jember, {{$dataUserSantri['calon_santris']['tanggal_daftar']??''}}</p>
+                                <p style="width:100%;text-align: right;font-size:13px;line-height: 1.5;">Jember, {{ isset($dataUserSantri['calon_santris']['tanggal_daftar']) ? Carbon::parse($dataUserSantri['calon_santris']['tanggal_daftar'])->format('d M Y') : '' }}</p>
                         </div>
                         <div class="content_ttd_data clearfix" style="width:80%;margin:0 auto;" >
                            <div class="ttd_ortu" style="width:50%;float:left;">
@@ -144,7 +152,7 @@
                                 <div style="height:40px; width:80px;margin:5px auto;">
                                    
                                 </div>
-                                <p style="font-size:12px;text-align:center;">( {{$dataUserSantri['calon_santris']['nama_lengkap_santri']? $dataUserSantri['calon_santris']['nama_lengkap_santri'] : $dataUserSantri['name']  }} )</p>
+                                <p style="font-size:12px;text-align:center;">( {{isset($dataUserSantri['calon_santris']['nama_lengkap_santri'])? $dataUserSantri['calon_santris']['nama_lengkap_santri'] : $dataUserSantri['name']  }} )</p>
                             </div>
                            </div>
                         </div>

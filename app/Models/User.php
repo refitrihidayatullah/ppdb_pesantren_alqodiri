@@ -28,6 +28,7 @@ class User extends Authenticatable
         'password',
         'no_hp',
         'level',
+        'jenkel',
     ];
 
 
@@ -151,7 +152,29 @@ class User extends Authenticatable
             ->whereDoesntHave('CalonSantris')
             ->get();
     }
-
+    // formulir pendaftaran putra first
+    public static function putraWithoutIdInCalonSantri()
+    {
+        return static::where('level', '!=', 'superadmin')
+            ->where('level', '!=', 'admin')
+            ->where('jenkel', 'laki-laki')
+            ->whereDoesntHave('CalonSantris')
+            ->get();
+    }
+    // formulir pendaftaran putra first
+    public static function putriWithoutIdInCalonSantri()
+    {
+        return static::where('level', '!=', 'superadmin')
+            ->where('level', '!=', 'admin')
+            ->where('jenkel', 'perempuan')
+            ->whereDoesntHave('CalonSantris')
+            ->get();
+    }
+    // update foto di formulir oendaftaran
+    public static function updateFotoCalonSantri(array $data = [], $id)
+    {
+        return static::where('id_user', $id)->update($data);
+    }
 
     // relasi first
 

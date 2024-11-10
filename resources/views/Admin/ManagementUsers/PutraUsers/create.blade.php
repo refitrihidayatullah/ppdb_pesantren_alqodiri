@@ -40,6 +40,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-putraJenkel">Jenis Kelamin<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="putraJenkel" name="putraJenkel">
+                                 <option value="">Pilih Jenis Kelamin...</option>
+                                 @foreach ($jenis_kelamin as $kelamin)
+                                 <option value="{{$kelamin}}" {{old('putraJenkel') == $kelamin ? 'selected': ''}}>{{$kelamin}}</option>
+                                 @endforeach                     
+                                </select>
+                                @error('putraJenkel')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-lg-4 col-form-label" for="val-level">Status <span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">

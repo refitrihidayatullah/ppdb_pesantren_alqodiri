@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-validation">
-                    <form class="form-valide" action="{{url('/users/store/')}}" method="POST">
+                    <form class="form-valide" action="{{url("/users/store")}}" method="POST">
                         @csrf
                         <div class="form-group row">
                             <label class="col-lg-4 col-form-label" for="val-name">Nama Lengkap<span class="text-danger">*</span>
@@ -16,7 +16,7 @@
                                 <input type="text" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror" id="val-name" name="name" placeholder="Masukkan Nama Lengkap..">
                                 @error('name')
                                 <div class="form-text text-danger">{{$message}}.</div>
-                              @enderror
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
@@ -25,8 +25,8 @@
                             <div class="col-lg-6">
                                 <input type="text" class="form-control @error('email') is-invalid @enderror" id="val-email" value="{{old('email')}}" name="email" placeholder="Masukkan Email Anda..">
                                 @error('email')
-                                    <div class="form-text text-danger">{{$message}}.</div>
-                                  @enderror
+                                <div class="form-text text-danger">{{$message}}.</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
@@ -35,6 +35,22 @@
                             <div class="col-lg-6">
                                 <input type="number" value="{{old('no_hp')}}" class="form-control @error('no_hp') is-invalid @enderror" id="val-no_hp" name="no_hp" placeholder="Masukkan Nomor Telp Anda..">
                                 @error('no_hp')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-jenkel">Jenis Kelamin<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select class="form-control" id="jenkel" name="jenkel">
+                                 <option value="">Pilih Jenis Kelamin...</option>
+                                 @foreach ($jenis_kelamin as $kelamin)
+                                 <option value="{{$kelamin}}" {{old('jenkel') == $kelamin ? 'selected': ''}}>{{$kelamin}}</option>
+                                 @endforeach                     
+  
+                                </select>
+                                @error('jenkel')
                                 <div class="form-text text-danger">{{$message}}.</div>
                               @enderror
                             </div>
@@ -51,7 +67,7 @@
                                 </select>
                                 @error('level')
                                 <div class="form-text text-danger">{{$message}}.</div>
-                              @enderror
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
@@ -74,6 +90,7 @@
                               @enderror
                             </div>
                         </div>
+
 
 
 

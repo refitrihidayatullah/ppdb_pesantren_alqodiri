@@ -32,6 +32,18 @@ class StatusValidasi extends Model
         return static::where('user_id', $id)->update($data);
     }
 
+    // update status validasi edit putra --management validasi
+    public static function updateStatusValidasiPutra(array $data, $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
+    // update status validasi edit putra --management validasi
+    public static function updateStatusValidasiPutri(array $data, $id)
+    {
+        return static::where('user_id', $id)->update($data);
+    }
+
 
     // update status validasi saat user mengisi form pendaftaran --form pendaftaran
     public static function updateStatusValidasiForm(array $data = [], $id)

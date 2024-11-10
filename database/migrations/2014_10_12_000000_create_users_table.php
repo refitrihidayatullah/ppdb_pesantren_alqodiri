@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('no_hp')->unique();
             $table->string('password');
             $table->string('level');
+            $table->string('jenkel')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

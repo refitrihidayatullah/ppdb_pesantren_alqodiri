@@ -49,6 +49,18 @@
                 @enderror
                 </div>
                 <div class="input-fields">
+                  <label for="">Jenis Kelamin</label>
+                 <select name="jenkel" id="jenkel" style="color:grey;" class="@error('jenkel') is-invalid @enderror">
+                  <option value="">Pilih Jenis Kelamin..</option>
+                  @foreach ($jeniskelamin as $jenkel)
+                      <option value="{{$jenkel}}">{{$jenkel}}</option>
+                  @endforeach
+                 </select>
+                  @error('jenkel')
+                  <div class="form-text text-danger">{{$message}}.</div>
+                @enderror
+                </div>
+                <div class="input-fields">
                   <label for="">Password</label>
                   <input type="password"  name="password" class="@error('password') is-invalid @enderror" placeholder="Masukkan password.."  />
                   @error('password')

@@ -80,7 +80,8 @@ form .fields .input-fields {
     font-weight: 500;
     color: #2e2e2e;
 }
-.input-fields input {
+.input-fields input,
+.input-fields select {
     height: 42px;
     margin: 8px 0;
     color: #333;

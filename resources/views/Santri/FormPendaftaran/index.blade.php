@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-validation">
-                    <form class="form-valide" action="{{url('/form-pendaftaran/store')}}" method="POST">
+                    <form class="form-valide" action="{{url('/form-pendaftaran/store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group-row mb-3">
                             <h4>Data Diri</h4>
@@ -21,13 +21,32 @@
                             <div class="col-lg-6">
                                 <select class="form-control" id="user" name="user">
                                  <option value="">Pilih Calon Santri...</option>
-                               @if (count($usersWithoutCalonSantri) > 0)
-                               @foreach ($usersWithoutCalonSantri as $notCalonSantri)
-                               <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}</option>
-                               @endforeach                     
-                               @else
-                               <option value="">Belum Ada Calon Santri yang terdaftar</option>                                      
-                               @endif
+                                 @if (Auth::user()->level === "admin" && Auth::user()->jenkel === "putra")
+                                        @if (count($putraWithoutCalonSantri) > 0)
+                                                @foreach ($putraWithoutCalonSantri as $notCalonSantri)
+                                                    <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}</option>
+                                                @endforeach                     
+                                        @else
+                                                <option value="">Belum Ada Calon Santri yang terdaftar</option>                                      
+                                        @endif
+                                 @elseif (Auth::user()->level === "admin" && Auth::user()->jenkel === "putri")
+                                        @if (count($putriWithoutCalonSantri) > 0)
+                                                @foreach ($putriWithoutCalonSantri as $notCalonSantri)
+                                                    <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}</option>
+                                                @endforeach                     
+                                        @else
+                                         <option value="">Belum Ada Calon Santri yang terdaftar</option>                                      
+                                 @endif
+                                 @else
+                                        @if (count($usersWithoutCalonSantri) > 0)
+                                                @foreach ($usersWithoutCalonSantri as $notCalonSantri)
+                                                    <option value="{{$notCalonSantri->id_user}}">{{$notCalonSantri->name}}</option>
+                                                @endforeach                     
+                                        @else
+                                                <option value="">Belum Ada Calon Santri yang terdaftar</option>                                      
+                                        @endif
+                                 
+                                 @endif
                                 </select>
                                 @error('user')
                                 <div class="form-text text-danger">{{$message}}.</div>
@@ -189,6 +208,16 @@
                               @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="val-foto_santri">Foto Santri 3x4<span class="text-danger"></span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control  @error('foto_santri') is-invalid @enderror" id="val-foto_santri" name="foto_santri">
+                            </div>
+                            @error('foto_santri')
+                                <div class="form-text text-danger">{{$message}}.</div>
+                              @enderror
+                        </div>
                         <div class="form-group-row mb-3">
                             <h4>Data Orang Tua/Wali</h4>
                         </div>
@@ -276,7 +305,11 @@
                         <div class="form-group row">
                             <div class="col-lg-8 ml-auto">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
+                                @if (Auth::user()->level == "admin" || Auth::user()->level == "superadmin")
                                 <a href="{{url('/users')}}" type="button" class="btn btn-secondary">Kembali</a>
+                                @else
+                                <a href="{{url('/dashboard-santri')}}" type="button" class="btn btn-secondary">Kembali</a>
+                                @endif
                             </div>
                         </div>
                     </form>
